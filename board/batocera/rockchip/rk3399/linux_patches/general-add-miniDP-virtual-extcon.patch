@@ -65,7 +65,7 @@ index 8de9023c2a38..21f0f856cacb 100644
 @@ -191,4 +191,14 @@ config EXTCON_USBC_TUSB320
  	  Say Y here to enable support for USB Type C cable detection extcon
  	  support using a TUSB320.
- 
+
 +config EXTCON_USBC_VIRTUAL_PD
 +	tristate "Virtual Type-C PD EXTCON support"
 +	depends on GPIOLIB || COMPILE_TEST
@@ -240,7 +240,7 @@ index 000000000000..e0713670e33d
 +
 +	vpd->data_role = vpd_extcon_data_role(vpd);
 +
-+	vpd->det_gpio = devm_gpiod_get_optional(dev, "det", GPIOD_OUT_LOW);
++	vpd->det_gpio = devm_gpiod_get_optional(dev, "det", GPIOD_ASIS);
 +	if (IS_ERR(vpd->det_gpio)) {
 +		ret = PTR_ERR(vpd->det_gpio);
 +		dev_warn(dev, "failed to get det gpio: %d\n", ret);
@@ -377,6 +377,6 @@ index 000000000000..e0713670e33d
 +MODULE_AUTHOR("Jagan Teki <jagan@amarulasolutions.com>");
 +MODULE_DESCRIPTION("Type-C Virtual PD extcon driver");
 +MODULE_LICENSE("GPL v2");
--- 
+--
 Armbian
 
