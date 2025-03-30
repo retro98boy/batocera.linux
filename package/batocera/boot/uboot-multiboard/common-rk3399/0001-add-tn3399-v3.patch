@@ -35,10 +35,16 @@ index 00000000..c58ad95d
 +};
 diff --git a/arch/arm/dts/rk3399-tn3399-v3.dts b/arch/arm/dts/rk3399-tn3399-v3.dts
 new file mode 100644
-index 00000000..27485c80
+index 00000000..099580ba
 --- /dev/null
 +++ b/arch/arm/dts/rk3399-tn3399-v3.dts
-@@ -0,0 +1,802 @@
+@@ -0,0 +1,882 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
++ * Copyright (c) 2022 retro98boy <retro98boy@qq.com>
++ */
++
 +/dts-v1/;
 +
 +#include <dt-bindings/input/linux-event-codes.h>
@@ -54,6 +60,16 @@ index 00000000..27485c80
 +		mmc0 = &sdhci;
 +		mmc1 = &sdmmc;
 +		mmc2 = &sdio0;
++		/*
++		 * Note: Since the voltage for the level converter between the rk3399 and hym8563 I2C communication is provided by the rk808 regulator,
++		 * the hym8563 driver can only be successfully probed if it is loaded after the rk808 regulator driver.
++		 */
++		rtc0 = &hym8563;
++		/*
++		 * The rk808 circuit design on this board does not have the ability to maintain real-time time after a power outage (battery R1110 NC).
++		 * Registering rk808 as rtc99 (most kernel configurations read time from rtc0) can prevent the kernel from reading the time (2013) from rk808 during startup.
++		 */
++		rtc99 = &rk808;
 +	};
 +
 +	chosen {
@@ -65,6 +81,16 @@ index 00000000..27485c80
 +		clock-frequency = <125000000>;
 +		clock-output-names = "clkin_gmac";
 +		#clock-cells = <0>;
++	};
++
++	// use the 2 pin LED connector (CN11) next to the 12v DC jack to connect the fan
++	fan: gpio-fan {
++		compatible = "gpio-fan";
++		gpio-fan,speed-map = <0 0 3000 1>;
++		gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
++		#cooling-cells = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_fan_en>;
 +	};
 +
 +	gpio-leds {
@@ -185,9 +211,23 @@ index 00000000..27485c80
 +		regulator-name = "vcc3v0_sd";
 +		regulator-always-on;
 +		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
 +		vin-supply = <&vcc3v3_sys>;
++	};
++
++	vcc3v6_lte: regulator-vcc3v6-lte {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&vcc3v6_lte_en>;
++		regulator-name = "vcc3v6_lte";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3600000>;
++		regulator-max-microvolt = <3600000>;
++		vin-supply = <&dc12v>;
 +	};
 +
 +	vcca1v8_s3: regulator-vcca1v8-s3 {
@@ -264,6 +304,23 @@ index 00000000..27485c80
 +
 +&cpu_b1 {
 +	cpu-supply = <&vdd_cpu_b>;
++};
++
++&cpu_thermal {
++	trips {
++		cpu_hot: cpu_hot {
++			temperature = <55000>;
++			hysteresis = <10000>;
++			type = "active";
++		};
++	};
++
++	cooling-maps {
++		map2 {
++			trip = <&cpu_hot>;
++			cooling-device = <&fan THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
 +};
 +
 +&emmc_phy {
@@ -382,7 +439,7 @@ index 00000000..27485c80
 +
 +			vcc_1v8: DCDC_REG4 {
 +				regulator-name = "vcc_1v8";
-+				regulator-always-on;
++				regulator-always-on;    // Provide voltage to the level converter for hym8563 I2C communication
 +				regulator-boot-on;
 +				regulator-min-microvolt = <1800000>;
 +				regulator-max-microvolt = <1800000>;
@@ -405,6 +462,8 @@ index 00000000..27485c80
 +
 +			vcc3v0_touch: LDO_REG2 {
 +				regulator-name = "vcc3v0_touch";
++				regulator-always-on;    // Provide voltage to the level converter for hym8563 I2C communication
++				regulator-boot-on;
 +				regulator-min-microvolt = <3000000>;
 +				regulator-max-microvolt = <3000000>;
 +				regulator-state-mem {
@@ -555,6 +614,15 @@ index 00000000..27485c80
 +
 +&i2c2 {
 +	status = "okay";
++	i2c-scl-rising-time-ns = <300>;
++	i2c-scl-falling-time-ns = <300>;
++
++	hym8563: rtc@51 {
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-output-names = "hym8563_xin32k";
++	};
 +};
 +
 +&i2c3 {
@@ -588,6 +656,12 @@ index 00000000..27485c80
 +};
 +
 +&pinctrl {
++	fan {
++		gpio_fan_en: gpio-fan-en {
++			rockchip,pins = <1 RK_PB5 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++
 +	gmac {
 +		phy_rst_l: phy-rst-l {
 +			rockchip,pins = <3 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
@@ -625,6 +699,12 @@ index 00000000..27485c80
 +	leds {
 +		sys_led: sys-led {
 +			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	lte {
++		vcc3v6_lte_en: vcc3v6-lte-en {
++			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_down>;
 +		};
 +	};
 +
@@ -727,7 +807,7 @@ index 00000000..27485c80
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&sdmmc_clk &sdmmc_cd &sdmmc_cmd &sdmmc_bus4>;
 +	vmmc-supply = <&vcc3v0_sd>;
-+	vqmmc-supply = <&vcc_sdio>;
++	vqmmc-supply = <&vcc3v0_sd>;
 +	sd-uhs-sdr104;
 +	status = "okay";
 +};
