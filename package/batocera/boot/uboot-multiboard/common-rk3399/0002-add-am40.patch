@@ -1,15 +1,15 @@
 diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 263df279..d58525c8 100644
+index 263df279..2d33fde9 100644
 --- a/arch/arm/dts/Makefile
 +++ b/arch/arm/dts/Makefile
-@@ -162,6 +162,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
- 	rk3399-rock960.dtb \
- 	rk3399-rockpro64.dtb \
- 	rk3399-tn3399-v3.dtb \
-+	rk3399-am40.dtb \
- 	rk3399pro-rock-pi-n10.dtb
+@@ -135,6 +135,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3368) += \
+ 	rk3368-px5-evb.dtb \
  
- dtb-$(CONFIG_ROCKCHIP_RK3568) += \
+ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
++	rk3399-am40.dtb \
+ 	rk3399-evb.dtb \
+ 	rk3399-eaidk-610.dtb \
+ 	rk3399-ficus.dtb \
 diff --git a/arch/arm/dts/rk3399-am40-u-boot.dtsi b/arch/arm/dts/rk3399-am40-u-boot.dtsi
 new file mode 100644
 index 00000000..c58ad95d
@@ -35,10 +35,16 @@ index 00000000..c58ad95d
 +};
 diff --git a/arch/arm/dts/rk3399-am40.dts b/arch/arm/dts/rk3399-am40.dts
 new file mode 100644
-index 00000000..69b2808a
+index 00000000..3d43fba3
 --- /dev/null
 +++ b/arch/arm/dts/rk3399-am40.dts
-@@ -0,0 +1,742 @@
+@@ -0,0 +1,755 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
++ * Copyright (c) 2025 retro98boy <retro98boy@qq.com>
++ */
++
 +/dts-v1/;
 +
 +#include <dt-bindings/input/linux-event-codes.h>
@@ -53,6 +59,11 @@ index 00000000..69b2808a
 +	aliases {
 +		mmc0 = &sdhci;
 +		mmc1 = &sdmmc;
++		/*
++		 * The rk808 circuit design on this board does not have the ability to maintain real-time time after a power outage.
++		 * Registering rk808 as rtc99 (most kernel configurations read time from rtc0) can prevent the kernel from reading the time (2013) from rk808 during startup.
++		 */
++		rtc99 = &rk808;
 +	};
 +
 +	chosen {
@@ -208,7 +219,9 @@ index 00000000..69b2808a
 +	};
 +
 +	virtual_pd: virtual-pd {
-+		compatible = "linux,extcon-usbc-virtual-pd2";
++		compatible = "linux,extcon-usbc-virtual-pd";
++		pinctrl-names = "default";
++		pinctrl-0 = <&dp_hpd>;
 +		det-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
 +		vpd-data-role = "display-port";
 +		vpd-super-speed;
@@ -562,7 +575,7 @@ index 00000000..69b2808a
 +	};
 +
 +	display {
-+		dp-hpd {
++		dp_hpd: dp-hpd {
 +			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +
