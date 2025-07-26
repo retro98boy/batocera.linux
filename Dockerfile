@@ -1,5 +1,6 @@
 FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
+RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 RUN dpkg --add-architecture i386 && \
 	apt-get update && \
 	apt-get install -y -o APT::Immediate-Configure=0 libc6:i386 \
@@ -11,6 +12,7 @@ RUN dpkg --add-architecture i386 && \
 		libncurses6 \
 		libncurses-dev \
 		libssl-dev \
+		libgnutls28-dev \
 		mercurial \
 		texinfo \
 		zip \
