@@ -1,0 +1,154 @@
+From 7edb654e5a143362b72b82052a0e532032a916af Mon Sep 17 00:00:00 2001
+From: retro98boy <retro98boy@qq.com>
+Date: Sun, 27 Jul 2025 12:47:50 +0800
+Subject: [PATCH] add cainiao-cniot-core conf files
+
+---
+ .../cainiao-cniot-core-HiFi.conf              | 61 +++++++++++++++++++
+ .../axg-sound-card/cainiao-cniot-core.conf    | 56 +++++++++++++++++
+ .../axg-sound-card/cainiao-cniot-core.conf    |  1 +
+ 3 files changed, 118 insertions(+)
+ create mode 100644 ucm2/Amlogic/axg-sound-card/cainiao-cniot-core-HiFi.conf
+ create mode 100644 ucm2/Amlogic/axg-sound-card/cainiao-cniot-core.conf
+ create mode 120000 ucm2/conf.d/axg-sound-card/cainiao-cniot-core.conf
+
+diff --git a/ucm2/Amlogic/axg-sound-card/cainiao-cniot-core-HiFi.conf b/ucm2/Amlogic/axg-sound-card/cainiao-cniot-core-HiFi.conf
+new file mode 100644
+index 0000000..afa41df
+--- /dev/null
++++ b/ucm2/Amlogic/axg-sound-card/cainiao-cniot-core-HiFi.conf
+@@ -0,0 +1,61 @@
++SectionVerb {
++	Value {
++		TQ "HiFi"
++	}
++
++	# Note that if some audio paths are not pre-configured here,
++	# allowing audio streams to be input to the device without returning errors,
++	# it will cause PipeWire to fail in parsing ALSA UCM.
++	EnableSequence [
++		# FRDDR_A -> TDMOUT_A -> TOHDMITX -> HDMI
++		cset "name='FRDDR_A SINK 1 SEL' 'OUT 0'"
++		cset "name='FRDDR_A SRC 1 EN Switch' on"
++		cset "name='TDMOUT_A SRC SEL' 'IN 0'"
++		cset "name='TOHDMITX Switch' off" # Disable output
++		cset "name='TOHDMITX I2S SRC' 'I2S A'"
++
++		# FRDDR_B -> TDMOUT_B -> TOACODEC -> ACODEC -> Internal Speaker
++		cset "name='FRDDR_B SINK 1 SEL' 'OUT 1'"
++		cset "name='FRDDR_B SRC 1 EN Switch' on"
++		cset "name='TDMOUT_B SRC SEL' 'IN 1'"
++		cset "name='TOACODEC Lane Select' 0"
++		cset "name='TOACODEC OUT EN Switch' off" # Disable output
++		cset "name='TOACODEC SRC' 'I2S B'"
++		cset "name='ACODEC Playback Volume' 255"
++	]
++}
++
++SectionDevice."HDMI" {
++	Comment "HDMI"
++
++	Value {
++		PlaybackPriority 200
++		PlaybackPCM "hw:${CardId},0" # plughw won't work
++	}
++
++	EnableSequence [
++		cset "name='TOHDMITX Switch' on"
++	]
++
++	DisableSequence [
++		cset "name='TOHDMITX Switch' off"
++	]
++}
++
++SectionDevice."Speaker" {
++	Comment "Internal Speaker"
++
++	Value {
++		PlaybackPriority 100
++		PlaybackPCM "hw:${CardId},1" # plughw won't work
++		PlaybackMixerElem "ACODEC"
++	}
++
++	EnableSequence [
++		cset "name='TOACODEC OUT EN Switch' on"
++	]
++
++	DisableSequence [
++		cset "name='TOACODEC OUT EN Switch' off"
++	]
++}
+diff --git a/ucm2/Amlogic/axg-sound-card/cainiao-cniot-core.conf b/ucm2/Amlogic/axg-sound-card/cainiao-cniot-core.conf
+new file mode 100644
+index 0000000..7155652
+--- /dev/null
++++ b/ucm2/Amlogic/axg-sound-card/cainiao-cniot-core.conf
+@@ -0,0 +1,56 @@
++Syntax 4
++
++Comment "CAINIAO CNIoT-CORE Sound"
++
++SectionUseCase."HiFi" {
++	File "/Amlogic/axg-sound-card/cainiao-cniot-core-HiFi.conf"
++	Comment "Play HiFi quality music"
++}
++
++BootSequence [
++	# Reset to default
++	cset "name='ACODEC Playback Volume' 0"
++	cset "name='ACODEC Left DAC Sel' 'Left'"
++	cset "name='ACODEC Mute Ramp Switch' off"
++	cset "name='ACODEC Playback Channel Mode' 'Stereo'"
++	cset "name='ACODEC Ramp Rate' 'Fast'"
++	cset "name='ACODEC Right DAC Sel' 'Right'"
++	cset "name='ACODEC Unmute Ramp Switch' off"
++	cset "name='ACODEC Volume Ramp Switch' off"
++	cset "name='FRDDR_A SINK 1 SEL' 'OUT 0'"
++	cset "name='FRDDR_A SINK 2 SEL' 'OUT 0'"
++	cset "name='FRDDR_A SINK 3 SEL' 'OUT 0'"
++	cset "name='FRDDR_A SRC 1 EN Switch' off"
++	cset "name='FRDDR_A SRC 2 EN Switch' off"
++	cset "name='FRDDR_A SRC 3 EN Switch' off"
++	cset "name='FRDDR_B SINK 1 SEL' 'OUT 0'"
++	cset "name='FRDDR_B SINK 2 SEL' 'OUT 0'"
++	cset "name='FRDDR_B SINK 3 SEL' 'OUT 0'"
++	cset "name='FRDDR_B SRC 1 EN Switch' off"
++	cset "name='FRDDR_B SRC 2 EN Switch' off"
++	cset "name='FRDDR_B SRC 3 EN Switch' off"
++	cset "name='FRDDR_C SINK 1 SEL' 'OUT 0'"
++	cset "name='FRDDR_C SINK 2 SEL' 'OUT 0'"
++	cset "name='FRDDR_C SINK 3 SEL' 'OUT 0'"
++	cset "name='FRDDR_C SRC 1 EN Switch' off"
++	cset "name='FRDDR_C SRC 2 EN Switch' off"
++	cset "name='FRDDR_C SRC 3 EN Switch' off"
++	cset "name='TDMOUT_A Gain Enable Switch' off"
++	cset "name='TDMOUT_A Lane 0 Volume' 0"
++	cset "name='TDMOUT_A Lane 1 Volume' 0"
++	cset "name='TDMOUT_A Lane 2 Volume' 0"
++	cset "name='TDMOUT_A Lane 3 Volume' 0"
++	cset "name='TDMOUT_A SRC SEL' 'IN 0'"
++	cset "name='TDMOUT_B Gain Enable Switch' off"
++	cset "name='TDMOUT_B Lane 0 Volume' 0"
++	cset "name='TDMOUT_B Lane 1 Volume' 0"
++	cset "name='TDMOUT_B Lane 2 Volume' 0"
++	cset "name='TDMOUT_B Lane 3 Volume' 0"
++	cset "name='TDMOUT_B SRC SEL' 'IN 0'"
++	cset "name='TOACODEC Lane Select' 0"
++	cset "name='TOACODEC OUT EN Switch' off"
++	cset "name='TOACODEC SRC' 'I2S A'"
++	cset "name='TOHDMITX Switch' off"
++	cset "name='TOHDMITX I2S SRC' 'I2S A'"
++	cset "name='TOHDMITX SPDIF SRC' 'SPDIF A'"
++]
+diff --git a/ucm2/conf.d/axg-sound-card/cainiao-cniot-core.conf b/ucm2/conf.d/axg-sound-card/cainiao-cniot-core.conf
+new file mode 120000
+index 0000000..a808a3d
+--- /dev/null
++++ b/ucm2/conf.d/axg-sound-card/cainiao-cniot-core.conf
+@@ -0,0 +1 @@
++../../Amlogic/axg-sound-card/cainiao-cniot-core.conf
+\ No newline at end of file
+-- 
+2.50.1
+
