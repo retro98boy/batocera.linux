@@ -35,10 +35,10 @@ index 00000000..c58ad95d
 +};
 diff --git a/arch/arm/dts/rk3399-tn3399-v3.dts b/arch/arm/dts/rk3399-tn3399-v3.dts
 new file mode 100644
-index 00000000..099580ba
+index 00000000..066389e7
 --- /dev/null
 +++ b/arch/arm/dts/rk3399-tn3399-v3.dts
-@@ -0,0 +1,882 @@
+@@ -0,0 +1,880 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
@@ -83,8 +83,8 @@ index 00000000..099580ba
 +		#clock-cells = <0>;
 +	};
 +
-+	// use the 2 pin LED connector (CN11) next to the 12v DC jack to connect the fan
-+	fan: gpio-fan {
++	/* Use the 2 pin LED connector (CN11) next to the 12v DC jack to connect the fan */
++	fan0: gpio-fan {
 +		compatible = "gpio-fan";
 +		gpio-fan,speed-map = <0 0 3000 1>;
 +		gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
@@ -310,7 +310,7 @@ index 00000000..099580ba
 +	trips {
 +		cpu_hot: cpu_hot {
 +			temperature = <55000>;
-+			hysteresis = <10000>;
++			hysteresis = <5000>;
 +			type = "active";
 +		};
 +	};
@@ -318,7 +318,7 @@ index 00000000..099580ba
 +	cooling-maps {
 +		map2 {
 +			trip = <&cpu_hot>;
-+			cooling-device = <&fan THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++			cooling-device = <&fan0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};
 +	};
 +};
@@ -439,7 +439,7 @@ index 00000000..099580ba
 +
 +			vcc_1v8: DCDC_REG4 {
 +				regulator-name = "vcc_1v8";
-+				regulator-always-on;    // Provide voltage to the level converter for hym8563 I2C communication
++				regulator-always-on;    /* Provide voltage to the level converter for hym8563 I2C communication */
 +				regulator-boot-on;
 +				regulator-min-microvolt = <1800000>;
 +				regulator-max-microvolt = <1800000>;
@@ -462,7 +462,7 @@ index 00000000..099580ba
 +
 +			vcc3v0_touch: LDO_REG2 {
 +				regulator-name = "vcc3v0_touch";
-+				regulator-always-on;    // Provide voltage to the level converter for hym8563 I2C communication
++				regulator-always-on;    /* Provide voltage to the level converter for hym8563 I2C communication */
 +				regulator-boot-on;
 +				regulator-min-microvolt = <3000000>;
 +				regulator-max-microvolt = <3000000>;
@@ -621,7 +621,6 @@ index 00000000..099580ba
 +		compatible = "haoyu,hym8563";
 +		reg = <0x51>;
 +		#clock-cells = <0>;
-+		clock-output-names = "hym8563_xin32k";
 +	};
 +};
 +
@@ -920,7 +919,6 @@ index 00000000..099580ba
 +&vopl_mmu {
 +	status = "okay";
 +};
-+
 diff --git a/configs/tn3399-v3-rk3399_defconfig b/configs/tn3399-v3-rk3399_defconfig
 new file mode 100644
 index 00000000..8b41ab69

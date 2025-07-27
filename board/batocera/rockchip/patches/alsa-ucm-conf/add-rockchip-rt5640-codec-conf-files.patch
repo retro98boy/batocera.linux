@@ -1,18 +1,30 @@
+From 57cdffc5ea029a93eb851810841332fe7aedf178 Mon Sep 17 00:00:00 2001
+From: retro98boy <retro98boy@qq.com>
+Date: Sun, 27 Jul 2025 15:04:08 +0800
+Subject: [PATCH] add rockchip,rt5640-codec conf files
+
+---
+ .../rockchip,rt5640-codec-HiFi.conf           | 90 +++++++++++++++++++
+ .../simple-card/rockchip,rt5640-codec.conf    | 18 ++++
+ 2 files changed, 108 insertions(+)
+ create mode 100644 ucm2/conf.d/simple-card/rockchip,rt5640-codec-HiFi.conf
+ create mode 100644 ucm2/conf.d/simple-card/rockchip,rt5640-codec.conf
+
 diff --git a/ucm2/conf.d/simple-card/rockchip,rt5640-codec-HiFi.conf b/ucm2/conf.d/simple-card/rockchip,rt5640-codec-HiFi.conf
 new file mode 100644
-index 0000000..45dffb5
+index 0000000..84d0ef2
 --- /dev/null
 +++ b/ucm2/conf.d/simple-card/rockchip,rt5640-codec-HiFi.conf
 @@ -0,0 +1,90 @@
 +SectionVerb {
 +	Value {
-+		TQ HiFi
++		TQ "HiFi"
 +		PlaybackChannels 2
 +		CaptureChannels 2
 +	}
 +
 +	EnableSequence [
-+		# for speaker and headphones
++		# For speakers and headphones
 +		cset "name='Stereo DAC MIXL DAC L1 Switch' on"
 +		cset "name='Stereo DAC MIXR DAC R1 Switch' on"
 +	]
@@ -96,21 +108,21 @@ index 0000000..45dffb5
 +}
 diff --git a/ucm2/conf.d/simple-card/rockchip,rt5640-codec.conf b/ucm2/conf.d/simple-card/rockchip,rt5640-codec.conf
 new file mode 100644
-index 0000000..1a3e0b9
+index 0000000..fdb68fd
 --- /dev/null
 +++ b/ucm2/conf.d/simple-card/rockchip,rt5640-codec.conf
 @@ -0,0 +1,18 @@
 +Syntax 4
 +
-+Comment "Rockchip ALC5640 card"
++Comment "Rockchip ALC5640 Sound"
 +
 +SectionUseCase."HiFi" {
 +	File "rockchip,rt5640-codec-HiFi.conf"
-+	Comment "Default"
++	Comment "Play HiFi quality music"
 +}
 +
 +BootSequence [
-+	# speaker default
++	# Enable speakers default
 +	cset "name='Stereo DAC MIXL DAC L1 Switch' on"
 +	cset "name='Stereo DAC MIXR DAC R1 Switch' on"
 +	cset "name='SPOL MIX DAC L1 Switch' on"
@@ -118,3 +130,6 @@ index 0000000..1a3e0b9
 +	cset "name='Speaker L Playback Switch' on"
 +	cset "name='Speaker R Playback Switch' on"
 +]
+-- 
+2.50.1
+
