@@ -20,25 +20,26 @@ PS：Batocera镜像只附带几个示例游戏ROM，需要玩家自己导入外�
 
 # 如何编译Batocera
 
-[这里](https://pan.baidu.com/s/1vD1iyD0hk2TpH0c3WGPV-w?pwd=elp1)打包了编译过程中需要额外下载的源码
-
 官方提供了基于Dokcer的编译方法，方便在任何Linux发行版上编译，步骤如下
 
-## 下载源码
+## 构建Docker镜像
 
 ```
-cd Desktop
-git clone -b 41 --recursive https://github.com/retro98boy/batocera.linux.git
-
-# 将提供的额外源码解压，免去编译过程中再下载
-cat dl.tar.zst* | unzstd -T0 -c | tar -xv -C ~/Desktop/batocera.linux
+docker buildx build -t batoceralinux/batocera.linux-build:latest .
 ```
 
 ## 编译
 
+首先下载源码
+
+```
+git clone -b 41 --recursive https://github.com/retro98boy/batocera.linux.git
+```
+
 不同平台的编译命令不同，例如RK3399平台只需：
 
 ```
+make rk3399-source
 make rk3399-build
 ```
 
@@ -51,3 +52,9 @@ make rk3399-build
 移植的设备不在官方的设备支持列表内，系统自带的在线升级不可用，但是官方为39及以后的版本提供本地升级方法：
 
 将对应板子的boot.tar.xz文件上传到板子的/userdata/system/upgrade目录（不存在就自行创建），然后在板子的shell执行batocera-upgrade manual即可
+
+# 替代
+
+[REG-Linux](https://github.com/REG-Linux/REG-Linux)
+
+[ROCKNIX](https://github.com/ROCKNIX/distribution)
