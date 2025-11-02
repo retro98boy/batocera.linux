@@ -35,10 +35,10 @@ index 00000000..c58ad95d
 +};
 diff --git a/arch/arm/dts/rk3399-am40.dts b/arch/arm/dts/rk3399-am40.dts
 new file mode 100644
-index 00000000..0d9343c6
+index 00000000..76c8658f
 --- /dev/null
 +++ b/arch/arm/dts/rk3399-am40.dts
-@@ -0,0 +1,779 @@
+@@ -0,0 +1,792 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
@@ -240,6 +240,7 @@ index 00000000..0d9343c6
 +			/* sound-dai = <&i2s2>; */
 +			sound-dai = <&spdif>;
 +		};
++
 +		simple-audio-card,codec {
 +			/* sound-dai = <&cdn_dp 0>; */
 +			sound-dai = <&cdn_dp 1>;
@@ -298,7 +299,7 @@ index 00000000..0d9343c6
 +			reset-assert-us = <10000>;
 +			reset-deassert-us = <30000>;
 +			reset-gpios = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
-+			realtek,ledsel = <0x820b>;
++			realtek,led-data = <0x820b>;
 +		};
 +	};
 +};
@@ -314,11 +315,11 @@ index 00000000..0d9343c6
 +	ddc-i2c-bus = <&i2c3>;
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&hdmi_cec>;
-+	status = "disabled";
++	status = "okay";
 +};
 +
 +&hdmi_sound {
-+	status = "disabled";
++	status = "okay";
 +};
 +
 +&i2c0 {
@@ -542,6 +543,10 @@ index 00000000..0d9343c6
 +	};
 +};
 +
++&i2c3 {
++	status = "okay";
++};
++
 +&i2c4 {
 +	status = "okay";
 +	i2c-scl-rising-time-ns = <300>;
@@ -648,7 +653,7 @@ index 00000000..0d9343c6
 +		};
 +	};
 +
-+	usb2 {
++	usb {
 +		vcc5v0_host_en: vcc5v0-hots-en {
 +			rockchip,pins = <1 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
@@ -726,6 +731,10 @@ index 00000000..0d9343c6
 +&u2phy0 {
 +	status = "okay";
 +
++	u2phy0_otg: otg-port {
++		status = "okay";
++	};
++
 +	u2phy0_host: host-port {
 +		phy-supply = <&vcc5v0_host>;
 +		status = "okay";
@@ -734,6 +743,10 @@ index 00000000..0d9343c6
 +
 +&u2phy1 {
 +	status = "okay";
++
++	u2phy1_otg: otg-port {
++		status = "okay";
++	};
 +
 +	u2phy1_host: host-port {
 +		phy-supply = <&vcc5v0_host>;
