@@ -2,6 +2,8 @@
 
 为自己持有的板子移植Batocera，目前支持的设备：
 
+- CAINIAO CNIoT-CORE
+
 - TIANNUO TN3399_V3
 
 - SMART AM40
