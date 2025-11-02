@@ -22,13 +22,10 @@ make cainiao-cniot-core_defconfig
 CROSS_COMPILE="${HOST_DIR}/bin/aarch64-buildroot-linux-gnu-" make -j$(nproc)
 cd ..
 
-# Fetch aml_encrypt_g12b
-git clone "https://github.com/LibreELEC/amlogic-boot-fip.git"
-AML_ENCRYPT="amlogic-boot-fip/khadas-vim3/aml_encrypt_g12b"
-
 # Fetch gxlimg source then compile it
-git clone "https://github.com/repk/gxlimg.git"
+git clone "https://github.com/retro98boy/gxlimg.git"
 cd gxlimg
+git reset --hard fde6a3dd0e13875a5b219389c0a6137616eaebdb
 make -j$(nproc)
 cd ..
 
@@ -40,15 +37,9 @@ BLOBS_DIR=amlogic-fip-blobs/cainiao-cniot-core
 EXTRACT_DIR="${BLOBS_DIR}/extract"
 
 mkdir -p ../uboot-cniot-core
+./gxlimg/gxlimg -e "${BLOBS_DIR}/DDR.USB" "$EXTRACT_DIR"
 rm -f "${EXTRACT_DIR}/bl33.enc"
-# The current version of gxlimg has a problem with the handling of bl3x,
-# which may cause the produced fip to fail to boot.
-# see https://github.com/repk/gxlimg/issues/19
-# ./gxlimg/gxlimg -t bl3x -s u-boot-2025.04/u-boot.bin "${EXTRACT_DIR}/bl33.enc"
-"$AML_ENCRYPT" --bl3sig \
-    --input u-boot-2025.04/u-boot.bin \
-    --output "${EXTRACT_DIR}/bl33.enc" \
-    --level v3 --type bl33
+./gxlimg/gxlimg -t bl3x -s u-boot-2025.04/u-boot.bin "${EXTRACT_DIR}/bl33.enc"
 ./gxlimg/gxlimg \
     -t fip \
     --bl2 "${EXTRACT_DIR}/bl2.sign" \
