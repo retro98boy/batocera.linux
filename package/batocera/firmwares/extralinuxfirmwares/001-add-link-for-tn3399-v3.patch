@@ -1,0 +1,16 @@
+diff --git a/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.bin b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.bin
+new file mode 120000
+index 0000000..e44aa55
+--- /dev/null
++++ b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.bin
+@@ -0,0 +1 @@
++brcmfmac43455-sdio.bin
+\ No newline at end of file
+diff --git a/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.txt b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.txt
+new file mode 120000
+index 0000000..2aba486
+--- /dev/null
++++ b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.txt
+@@ -0,0 +1 @@
++brcmfmac43455-sdio.txt
+\ No newline at end of file
