@@ -33,7 +33,7 @@ docker buildx build -t batoceralinux/batocera.linux-build:latest .
 首先下载源码
 
 ```
-git clone -b 41 --recursive https://github.com/retro98boy/batocera.linux.git
+git clone --recursive https://github.com/retro98boy/batocera.linux.git
 ```
 
 不同平台的编译命令不同，例如RK3399平台只需：
