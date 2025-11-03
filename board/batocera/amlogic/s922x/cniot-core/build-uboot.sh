@@ -37,7 +37,9 @@ BLOBS_DIR=amlogic-fip-blobs/cainiao-cniot-core
 EXTRACT_DIR="${BLOBS_DIR}/extract"
 
 mkdir -p ../uboot-cniot-core
+rm -rf "$EXTRACT_DIR" && mkdir "$EXTRACT_DIR"
 ./gxlimg/gxlimg -e "${BLOBS_DIR}/DDR.USB" "$EXTRACT_DIR"
+
 rm -f "${EXTRACT_DIR}/bl33.enc"
 ./gxlimg/gxlimg -t bl3x -s u-boot-2025.04/u-boot.bin "${EXTRACT_DIR}/bl33.enc"
 ./gxlimg/gxlimg \

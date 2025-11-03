@@ -37,8 +37,10 @@ BLOBS_DIR=amlogic-fip-blobs/cainiao-lemo-xiaoc
 EXTRACT_DIR="${BLOBS_DIR}/extract"
 
 mkdir -p ../uboot-lemo-xiaoc
-dd if="${BLOBS_DIR}/mmcblk0boot0" of="${BLOBS_DIR}/fip" bs=512 skip=1 conv=fsync,notrunc
-./gxlimg/gxlimg -e "${BLOBS_DIR}/fip" "$EXTRACT_DIR"
+rm -rf "$EXTRACT_DIR" && mkdir "$EXTRACT_DIR"
+dd if="${BLOBS_DIR}/mmcblk0boot0" of="${EXTRACT_DIR}/fip" bs=512 skip=1 conv=fsync,notrunc
+./gxlimg/gxlimg -e "${EXTRACT_DIR}/fip" "$EXTRACT_DIR"
+
 rm -f "${EXTRACT_DIR}/bl33.enc"
 ./gxlimg/gxlimg -t bl3x -s u-boot-2025.04/u-boot.bin "${EXTRACT_DIR}/bl33.enc"
 ./gxlimg/gxlimg \
