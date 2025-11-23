@@ -2991,6 +2991,11 @@ msgstr ""
 "Toestaan ​​dat spellen die verschillende resoluties ondersteunen, in een "
 "specifieke resolutie worden weergegeven."
 
+#. TRANSLATION: wine
+msgctxt "game_options"
+msgid "Allow wine to access raw io ports (usb, parallel, ...)"
+msgstr ""
+
 #. TRANSLATION: rpcs3
 msgctxt "game_options"
 msgid "Allows Alt+Tab to RPCS3's menu. Useful for manual disc-swapping."
@@ -3861,6 +3866,11 @@ msgid ""
 msgstr ""
 "Basisfiltertype voor het Jaguar-display bij renderen naar het "
 "oorspronkelijke display."
+
+#. TRANSLATION: hotkeys.keys
+msgctxt "keys_files"
+msgid "Batocera Control Center"
+msgstr ""
 
 #. TRANSLATION: cemu
 msgctxt "game_options"
@@ -6218,6 +6228,11 @@ msgctxt "game_options"
 msgid "DUAL CORE MODE"
 msgstr "DUAL CORE MODUS"
 
+#. TRANSLATION: melonds
+msgctxt "game_options"
+msgid "DUAL SCREEN"
+msgstr ""
+
 #. TRANSLATION: dolphin
 msgctxt "game_options"
 msgid "DUALSHOCK MOTION CONTROL"
@@ -6916,6 +6931,11 @@ msgstr "BREEDBEELDPATCHES INSCHAKELEN"
 
 #. TRANSLATION: wine
 msgctxt "game_options"
+msgid "ENABLE WINE DEVICES SERVICES"
+msgstr ""
+
+#. TRANSLATION: wine
+msgctxt "game_options"
 msgid "ENABLE XIM"
 msgstr "XIM INSCHAKELEN"
 
@@ -7128,6 +7148,13 @@ msgstr ""
 msgctxt "game_options"
 msgid "Enable High Dynamic Range if your display supports it."
 msgstr "Schakel Hoge Dynamic Range in als uw beeldscherm dit ondersteunt."
+
+#. TRANSLATION: melonds
+msgctxt "game_options"
+msgid ""
+"Enable MelonDS to display over two screens. Some related screen options will "
+"be ignored."
+msgstr ""
 
 #. TRANSLATION: pcsx2
 msgctxt "game_options"
@@ -14061,11 +14088,6 @@ msgstr ""
 "Reserveer een niet-deadzone in het midden van het wiel om rechtdoor te gaan "
 "(in graden)"
 
-#. TRANSLATION: hotkeys.keys
-msgctxt "keys_files"
-msgid "Reset"
-msgstr "Reset"
-
 #. TRANSLATION: wine
 msgctxt "game_options"
 msgid ""
@@ -18960,3 +18982,7 @@ msgstr "yape-pal"
 msgctxt "game_options"
 msgid "yellow/blue"
 msgstr "geel/blauw"
+
+#~ msgctxt "keys_files"
+#~ msgid "Reset"
+#~ msgstr "Reset"

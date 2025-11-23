@@ -2980,6 +2980,11 @@ msgid ""
 "resolution."
 msgstr "Povolit vykreslování her s různými rozlišeními v určitém rozlišení."
 
+#. TRANSLATION: wine
+msgctxt "game_options"
+msgid "Allow wine to access raw io ports (usb, parallel, ...)"
+msgstr ""
+
 #. TRANSLATION: rpcs3
 msgctxt "game_options"
 msgid "Allows Alt+Tab to RPCS3's menu. Useful for manual disc-swapping."
@@ -3843,6 +3848,11 @@ msgid ""
 msgstr ""
 "Základní typ filtrování pro zobrazení jaguára při vykreslování na nativní "
 "zobrazení."
+
+#. TRANSLATION: hotkeys.keys
+msgctxt "keys_files"
+msgid "Batocera Control Center"
+msgstr ""
 
 #. TRANSLATION: cemu
 msgctxt "game_options"
@@ -6184,6 +6194,11 @@ msgctxt "game_options"
 msgid "DUAL CORE MODE"
 msgstr "REŽIM DVOJITÉHO JÁDRA"
 
+#. TRANSLATION: melonds
+msgctxt "game_options"
+msgid "DUAL SCREEN"
+msgstr ""
+
 #. TRANSLATION: dolphin
 msgctxt "game_options"
 msgid "DUALSHOCK MOTION CONTROL"
@@ -6879,6 +6894,11 @@ msgstr "POVOLIT ŠIROKOÚHLÉ ZÁPLATY"
 
 #. TRANSLATION: wine
 msgctxt "game_options"
+msgid "ENABLE WINE DEVICES SERVICES"
+msgstr ""
+
+#. TRANSLATION: wine
+msgctxt "game_options"
 msgid "ENABLE XIM"
 msgstr "POVOLIT XIM"
 
@@ -7089,6 +7109,13 @@ msgstr ""
 #. TRANSLATION: shadps4
 msgctxt "game_options"
 msgid "Enable High Dynamic Range if your display supports it."
+msgstr ""
+
+#. TRANSLATION: melonds
+msgctxt "game_options"
+msgid ""
+"Enable MelonDS to display over two screens. Some related screen options will "
+"be ignored."
 msgstr ""
 
 #. TRANSLATION: pcsx2
@@ -13954,11 +13981,6 @@ msgid ""
 "degrees)"
 msgstr "Vyhrazení nemrtvé zóny ve středu kola pro jízdu rovně (ve stupních)."
 
-#. TRANSLATION: hotkeys.keys
-msgctxt "keys_files"
-msgid "Reset"
-msgstr "Resetování"
-
 #. TRANSLATION: wine
 msgctxt "game_options"
 msgid ""
@@ -20170,6 +20192,10 @@ msgstr "žlutá/modrá"
 #~ msgstr ""
 #~ "Vykreslování o mnoho snímků dopředu zvýší výkon za cenu vstupního "
 #~ "zpoždění."
+
+#~ msgctxt "keys_files"
+#~ msgid "Reset"
+#~ msgstr "Resetování"
 
 #~ msgctxt "keys_files"
 #~ msgid "Reset the application"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-10-23 12:57+0000\n"
+"PO-Revision-Date: 2025-11-15 15:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: German (Germany)\n"
 "Language: de-DE\n"
@@ -2990,6 +2990,11 @@ msgstr ""
 "Rendern von spezifischen Auflösungen bei Spielen erlauben, die verschiedene "
 "Auflösungen unterstützen."
 
+#. TRANSLATION: wine
+msgctxt "game_options"
+msgid "Allow wine to access raw io ports (usb, parallel, ...)"
+msgstr "Wine den Zugriff auf RAW-I/O-Ports erlauben (USB, Parallelport usw.)"
+
 #. TRANSLATION: rpcs3
 msgctxt "game_options"
 msgid "Allows Alt+Tab to RPCS3's menu. Useful for manual disc-swapping."
@@ -3859,6 +3864,11 @@ msgid ""
 msgstr ""
 "Grundlegender Filtertyp für das Jaguar-Display beim Rendern auf dem nativen "
 "Display."
+
+#. TRANSLATION: hotkeys.keys
+msgctxt "keys_files"
+msgid "Batocera Control Center"
+msgstr "Batocera Control Center"
 
 #. TRANSLATION: cemu
 msgctxt "game_options"
@@ -6214,6 +6224,11 @@ msgctxt "game_options"
 msgid "DUAL CORE MODE"
 msgstr "DUAL CORE MODUS"
 
+#. TRANSLATION: melonds
+msgctxt "game_options"
+msgid "DUAL SCREEN"
+msgstr ""
+
 #. TRANSLATION: dolphin
 msgctxt "game_options"
 msgid "DUALSHOCK MOTION CONTROL"
@@ -6912,6 +6927,11 @@ msgstr "BREITBILD-PATCHES AKTIVIEREN"
 
 #. TRANSLATION: wine
 msgctxt "game_options"
+msgid "ENABLE WINE DEVICES SERVICES"
+msgstr "WINE-GERÄTEDIENSTE AKTIVIEREN"
+
+#. TRANSLATION: wine
+msgctxt "game_options"
 msgid "ENABLE XIM"
 msgstr "XIM AKTIVIEREN"
 
@@ -7128,6 +7148,13 @@ msgstr ""
 msgctxt "game_options"
 msgid "Enable High Dynamic Range if your display supports it."
 msgstr "High Dynamic Range aktivieren, falls vom Display unterstützt."
+
+#. TRANSLATION: melonds
+msgctxt "game_options"
+msgid ""
+"Enable MelonDS to display over two screens. Some related screen options will "
+"be ignored."
+msgstr ""
 
 #. TRANSLATION: pcsx2
 msgctxt "game_options"
@@ -14094,11 +14121,6 @@ msgid ""
 msgstr ""
 "Reservierter Bereich innerhalb vom Todbereich um gerade aus zu fahren(in "
 "Grad)"
-
-#. TRANSLATION: hotkeys.keys
-msgctxt "keys_files"
-msgid "Reset"
-msgstr "Reset"
 
 #. TRANSLATION: wine
 msgctxt "game_options"
