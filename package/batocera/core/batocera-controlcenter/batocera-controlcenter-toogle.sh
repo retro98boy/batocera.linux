@@ -15,16 +15,19 @@ getCCPID() {
     return 1
 }
 
+FLAGS=
+test "$1" = "hidden" && FLAGS="--hidden"
+
 PIDVALUE=$(getCCPID)
 if test "$?" -eq 0
 then
-    # switch off
-    kill -15 "${PIDVALUE}"
+    # toogle
+    kill -10 "${PIDVALUE}"
 else
     # switch on
     export DISPLAY=$(getLocalXDisplay)
     . /etc/profile.d/wayland.sh 2>/dev/null
 
-    batocera-controlcenter-app 20 >/dev/null &
+    batocera-controlcenter-app ${FLAGS} 20 >/dev/null &
     echo "$!" > "${PIDFILE}"
 fi

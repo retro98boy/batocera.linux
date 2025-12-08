@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-AMIBERRY_VERSION = v7.1.0
+AMIBERRY_VERSION = d153c682e43dcaa5bed18588e9e35b53463d95d4
 AMIBERRY_SITE = $(call github,BlitterStudio,amiberry,$(AMIBERRY_VERSION))
 AMIBERRY_LICENSE = GPLv3
 AMIBERRY_SUPPORTS_IN_SOURCE_BUILD = NO
@@ -15,7 +15,7 @@ AMIBERRY_DEPENDENCIES += flac libpng libserialport libportmidi libzlib libenet
 AMIBERRY_CONF_OPTS += -DCMAKE_BUILD_TYPE=Release
 AMIBERRY_CONF_OPTS += -DWITH_LTO=ON
 
-ifeq ($(BR2_PACKAGE_LIBGLEW)$(BR2_PACKAGE_LIBGLU),y)
+ifeq ($(BR2_PACKAGE_LIBGLEW)$(BR2_PACKAGE_LIBGLU),yy)
 AMIBERRY_DEPENDENCIES += libglew libglu
 AMIBERRY_CONF_OPTS += -DUSE_OPENGL=ON
 else

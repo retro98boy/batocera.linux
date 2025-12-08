@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-11-15 15:17+0000\n"
+"PO-Revision-Date: 2025-11-21 14:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: German (Germany)\n"
 "Language: de-DE\n"
@@ -6227,7 +6227,7 @@ msgstr "DUAL CORE MODUS"
 #. TRANSLATION: melonds
 msgctxt "game_options"
 msgid "DUAL SCREEN"
-msgstr ""
+msgstr "DOPPELBILDSCHIRM"
 
 #. TRANSLATION: dolphin
 msgctxt "game_options"
@@ -7155,6 +7155,8 @@ msgid ""
 "Enable MelonDS to display over two screens. Some related screen options will "
 "be ignored."
 msgstr ""
+"Aktiviert die Anzeige über zwei Bildschirme in MelonDS. Einige "
+"Bildschirmoptionen werden ignoriert."
 
 #. TRANSLATION: pcsx2
 msgctxt "game_options"

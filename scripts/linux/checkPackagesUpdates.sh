@@ -146,6 +146,7 @@ PACKAGES_EMULATORS="amiberry
                     bigpemu
                     cemu
                     citron
+                    clk
                     hypseus-singe
                     dolphin-emu
                     dolphin-triforce
@@ -311,6 +312,7 @@ PACKAGES_CONTROLLERS="aelightgun
 PACKAGES_UTILS="btop
                 mangohud
                 moonlight-embedded
+                moonlight-qt
                 ryzenadj
                 switchres
                 syncthing
