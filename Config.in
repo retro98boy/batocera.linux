@@ -61,6 +61,7 @@ menu "System"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/boot/uboot-orangepi-5b/Config.in"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/boot/uboot-powkiddy-x55/Config.in"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/boot/uboot-rk3326/Config.in"
+    source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/boot/rocknix-abl/Config.in"
   endmenu
 
   menu "Toolchain"
@@ -470,6 +471,10 @@ menu "Emulators"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/ports/openjkdf2/Config.in"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/ports/openjk/Config.in"
     source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/ports/openmohaa/Config.in"
+    source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/ports/yquake2/Config.in"
+    source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/ports/yquake2/yquake2-xatrix/Config.in"
+    source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/ports/yquake2/yquake2-rogue/Config.in"
+    source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/ports/yquake2/yquake2-zaero/Config.in"
   endmenu
 
   menu "dhewm3"
@@ -680,6 +685,7 @@ menu "Libraries"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/semver/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/nghttp3/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/ngtcp2/Config.in"
+  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/libraries/cpp-ipc/Config.in"
 endmenu
 
 menu "Audio"
