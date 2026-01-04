@@ -27,6 +27,12 @@ case "$HW_DEVICE" in
     ;;
 esac
 
+MODEL=$(cat /proc/device-tree/model 2>/dev/null)
+if [[ "$MODEL" == "DAMO Cockpit8250" ]]; then
+    echo "This script is not compatible with device: $MODEL"
+    exit 1
+fi
+
 ELF="/usr/share/bootloader/rocknix_abl/abl_signed-${HW_DEVICE}.elf"
 SHA256SUM="/usr/share/bootloader/rocknix_abl/abl_signed-${HW_DEVICE}.elf.sha256"
 
