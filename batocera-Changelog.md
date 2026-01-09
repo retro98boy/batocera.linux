@@ -44,12 +44,14 @@
 - Yamagi Quake II added which support more systems, especially lower-end hardware
 - Light gun support to the new Libretro Dolphin core
 - Casio Loopy as a separate system
+- Enterprise 64/128 (via CLK emulator)
 ### Fixed
 - Not being able to exit emulator on first controller disconnection. i.e. Bluetooth disconnects.
 - Odin 2 variants wifi not working in some regions
 - Wifi country not being applied at boot
 - Light gun accuracy in MAME
 - Crosshairs for light guns in PCSX2
+- Massive MAME log (switchres verbose disabled by default)
 ### Changed / Improved
 - Wifi country can now be chosen under the Network Setting option.
   This improves Wifi connectivity by aligning your device with regional regulations as well as 6GHz band support.
@@ -57,18 +59,18 @@
   Hardware acceleration depends on supported codecs for devices in FFmpeg.
 - You can now choose to create a Win32 WINE bottle only via the option to run 32-bit Windows games.
 ### Updated
-- Azahar Plus to AZAHAR_PLUS_2123_3_A
+- Azahar to 2123.3
 - BigPEmu to v121
 - CLK to 2025-12-19
 - Dolphin-Emu to 2512-99
 - DXX-Rebirth to May 25, 2025
 - EDuke32 to Oct 10, 2025
-- Groovy MAME to 0.283
+- Groovy MAME to 0.284
 - Hatari to v2.6.1
 - Hurrican to Jul 26, 2025 build
 - Jazz2 to 3.4.0
 - Libretro Dolphin to 24th of December 2025 build
-- Libretro MAME to 0.283
+- Libretro MAME to 0.284
 - Libretro Play! to 0.72
 - Libretro Opera to 17th of October 2024 build
 - MelonDS to 1.1
@@ -76,7 +78,7 @@
 - OpenJKDF2 to v0.9.8
 - OpenMOHAA to v0.82.1
 - Play! to 0.72
-- PCSX2 to v2.5.405
+- PCSX2 to v2.6.0
 - RClone to v1.72.1
 - RetroArch to 1.22.2
 - RPCS3 to v0.0.39
@@ -85,11 +87,12 @@
 - Sonic CD to 1.3.3
 - Sonic Mania to v1.1.1
 - Supermodel to 13th of November 2025 build
+- Syncthing to 2.0.12
 - Taradino to 20251222
 - TheXTech to v1.3.7.2-1
 - TheForceEngine to v1.22.420
 - Vice to 3.10
-- VkQuake to 19th of November 2025 build 
+- VkQuake to 19th of November 2025 build
 - Xash3D FWGS engine to Oct 17 build
 - Xenia-Canary to build f85f4c3
 - Xemu to v0.8.129
@@ -101,7 +104,7 @@
 - Go language compiler to 1.25.5
 - GStreamer codecs to 1.26.6
 - Linux Firmware to 20251125
-- Linux Kernel to 6.18.2
+- Linux Kernel to 6.18.3
 - LabWC to 0.9.3
 - LLVM Project to 20.1.8
 - Mesa3D to 25.3.3
