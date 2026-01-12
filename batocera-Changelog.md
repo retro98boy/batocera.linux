@@ -26,6 +26,7 @@
 - Odin 2 Mini initial support
 - Powkiddy X55 initial support
 - Raxda Dragon Q6A initial support
+- Raxda Zero 3W initial support
 - RTL8832CU and RTL8852CU USB wifi adapter support (x86_64)
 ### Added
 - EmulationStation:
@@ -45,6 +46,7 @@
 - Light gun support to the new Libretro Dolphin core
 - Casio Loopy as a separate system
 - Enterprise 64/128 (via CLK emulator)
+- Xroar emulator as an option for the Color Computer (Tandy TRS-80)
 ### Fixed
 - Not being able to exit emulator on first controller disconnection. i.e. Bluetooth disconnects.
 - Odin 2 variants wifi not working in some regions
@@ -59,18 +61,23 @@
   Hardware acceleration depends on supported codecs for devices in FFmpeg.
 - You can now choose to create a Win32 WINE bottle only via the option to run 32-bit Windows games.
 ### Updated
-- Azahar to 2123.3
+- Azahar to 2123.4
 - BigPEmu to v121
 - CLK to 2025-12-19
 - Dolphin-Emu to 2512-99
 - DXX-Rebirth to May 25, 2025
 - EDuke32 to Oct 10, 2025
+- Flycast to 2.6
 - Groovy MAME to 0.284
 - Hatari to v2.6.1
 - Hurrican to Jul 26, 2025 build
 - Jazz2 to 3.4.0
 - Libretro Dolphin to 24th of December 2025 build
+- Libretro Fceumm to 12th of September 2025 build
+- Libretro Flycast to 2.6
 - Libretro MAME to 0.284
+- Libretro Nestopia to 10th of January 2026 build
+- Libretro Mesen to 24th of October 2024 build
 - Libretro Play! to 0.72
 - Libretro Opera to 17th of October 2024 build
 - MelonDS to 1.1
@@ -96,7 +103,7 @@
 - Xash3D FWGS engine to Oct 17 build
 - Xenia-Canary to build f85f4c3
 - Xemu to v0.8.129
-- Ymir to 0.2.0
+- Ymir to 0.2.1
 ### System
 - Bluez to 5.84
 - DXVK to 2.7.1
@@ -120,6 +127,7 @@
 - Vulkan stack to 1.4.328.1
 - Wayland to 1.24.0
 - Wayland Protocols to 1.45
+- WF-Recorder to v0.6.0
 - Wine Mono to 10.4.0
 - Wine-TKG to 10.20
 - Wine Proton to 10.0-3
