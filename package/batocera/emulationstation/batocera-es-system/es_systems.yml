@@ -3639,7 +3639,7 @@ coco:
     mame:
       mame: { requireAnyOf: [BR2_PACKAGE_MAME] }
     xroar:
-      xroar: { requireAnyOf: [BR2_PACKAGE_XROAR], incompatible_extensions: [zip, 7z] }
+      xroar: { requireAnyOf: [BR2_PACKAGE_XROAR] }
   comment_en: |
           MAME requires BIOS file coco.zip and coco3.zip
 
@@ -6025,6 +6025,21 @@ casloopy:
           Requer arquivo de BIOS do MAME:
           bios/mame/casloopy.zip
 
+pc60:
+  name: PC-6000
+  manufacturer: NEC
+  release: 1981
+  hardware: computer
+  extensions: [zip]
+  emulators:
+    mame:
+      mame:  { requireAnyOf: [BR2_PACKAGE_MAME] }
+    libretro:
+      mame:  { requireAnyOf: [BR2_PACKAGE_LIBRETRO_MAME] }
+  comment_en: |
+    Requires MAME BIOS file:
+    bios/mame/pc6001.zip
+    
 enterprise:
   name:       Enterprise
   manufacturer: Enterprise Computers
