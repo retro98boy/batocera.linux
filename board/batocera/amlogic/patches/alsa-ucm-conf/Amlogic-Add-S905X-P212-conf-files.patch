@@ -1,0 +1,104 @@
+From 0c5d1e964610e49adf321675e07861d077c6322d Mon Sep 17 00:00:00 2001
+From: retro98boy <retro98boy@qq.com>
+Date: Sun, 18 Jan 2026 16:14:07 +0800
+Subject: [PATCH] Amlogic: Add S905X-P212 conf files
+
+---
+ .../gx-sound-card/S905X-P212-HiFi.conf        | 42 +++++++++++++++++++
+ ucm2/Amlogic/gx-sound-card/S905X-P212.conf    | 25 +++++++++++
+ ucm2/conf.d/gx-sound-card/S905X-P212.conf     |  1 +
+ 3 files changed, 68 insertions(+)
+ create mode 100644 ucm2/Amlogic/gx-sound-card/S905X-P212-HiFi.conf
+ create mode 100644 ucm2/Amlogic/gx-sound-card/S905X-P212.conf
+ create mode 120000 ucm2/conf.d/gx-sound-card/S905X-P212.conf
+
+diff --git a/ucm2/Amlogic/gx-sound-card/S905X-P212-HiFi.conf b/ucm2/Amlogic/gx-sound-card/S905X-P212-HiFi.conf
+new file mode 100644
+index 0000000..ca4326a
+--- /dev/null
++++ b/ucm2/Amlogic/gx-sound-card/S905X-P212-HiFi.conf
+@@ -0,0 +1,42 @@
++SectionVerb {
++	Value {
++		TQ "HiFi"
++	}
++}
++
++SectionDevice."HDMI" {
++	Comment "HDMI"
++
++	Value {
++		PlaybackPriority 200
++		PlaybackPCM "hw:${CardId},0"
++	}
++
++	EnableSequence [
++		cset "name='AIU HDMI CTRL SRC' 'I2S'"
++	]
++
++	DisableSequence [
++		cset "name='AIU HDMI CTRL SRC' 'DISABLED'"
++	]
++}
++
++SectionDevice."Lineout" {
++	Comment "Lineout"
++
++	Value {
++		PlaybackPriority 100
++		PlaybackPCM "hw:${CardId},0"
++		PlaybackMixerElem "ACODEC"
++	}
++
++	EnableSequence [
++		cset "name='AIU ACODEC SRC' 'I2S'"
++		cset "name='AIU ACODEC OUT EN Switch' on"
++	]
++
++	DisableSequence [
++		cset "name='AIU ACODEC SRC' 'DISABLED'"
++		cset "name='AIU ACODEC OUT EN Switch' off"
++	]
++}
+diff --git a/ucm2/Amlogic/gx-sound-card/S905X-P212.conf b/ucm2/Amlogic/gx-sound-card/S905X-P212.conf
+new file mode 100644
+index 0000000..1637a85
+--- /dev/null
++++ b/ucm2/Amlogic/gx-sound-card/S905X-P212.conf
+@@ -0,0 +1,25 @@
++Syntax 4
++
++Comment "S905X P212 Sound"
++
++SectionUseCase."HiFi" {
++	File "/Amlogic/gx-sound-card/S905X-P212-HiFi.conf"
++	Comment "Play HiFi quality music"
++}
++
++BootSequence [
++	# Reset to default
++	cset "name='ACODEC Playback Volume' 255"
++	cset "name='ACODEC Left DAC Sel' 'Left'"
++	cset "name='ACODEC Mute Ramp Switch' off"
++	cset "name='ACODEC Playback Channel Mode' 'Stereo'"
++	cset "name='ACODEC Ramp Rate' 'Fast'"
++	cset "name='ACODEC Right DAC Sel' 'Right'"
++	cset "name='ACODEC Unmute Ramp Switch' off"
++	cset "name='ACODEC Volume Ramp Switch' off"
++	cset "name='AIU ACODEC I2S Lane Select' 0"
++	cset "name='AIU ACODEC OUT EN Switch' off"
++	cset "name='AIU ACODEC SRC' 'DISABLED'"
++	cset "name='AIU HDMI CTRL SRC' 'DISABLED'"
++	cset "name='AIU SPDIF SRC SEL' 'SPDIF'"
++]
+diff --git a/ucm2/conf.d/gx-sound-card/S905X-P212.conf b/ucm2/conf.d/gx-sound-card/S905X-P212.conf
+new file mode 120000
+index 0000000..cb85900
+--- /dev/null
++++ b/ucm2/conf.d/gx-sound-card/S905X-P212.conf
+@@ -0,0 +1 @@
++../../Amlogic/gx-sound-card/S905X-P212.conf
+\ No newline at end of file
+-- 
+2.52.0
+
