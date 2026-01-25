@@ -300,7 +300,6 @@ menu "Emulators"
       source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/emulators/retroarch/libretro/libretro-ppsspp/Config.in"
       source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/emulators/retroarch/libretro/libretro-opera/Config.in"
       source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/emulators/retroarch/libretro/libretro-tic80/Config.in"
-#      source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/emulators/retroarch/libretro/libretro-retro8/Config.in"
       source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/emulators/retroarch/libretro/libretro-fake08/Config.in"
       source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/emulators/retroarch/libretro/libretro-easyrpg/Config.in"
       source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/emulators/retroarch/libretro/libretro-melonds/Config.in"
@@ -530,6 +529,7 @@ endmenu
 menu "Looks"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/looks/adwaita-icon-theme-light/Config.in"
   source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/looks/hypseus-singe-bezels/Config.in"
+  source "$BR2_EXTERNAL_BATOCERA_PATH/package/batocera/looks/lightgun-controllers-art/Config.in"
 endmenu
 
 menu "Utils"

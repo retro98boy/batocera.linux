@@ -24,6 +24,12 @@ msgstr "Batocera"
 msgid "Battery"
 msgstr "Batteri"
 
+msgid "Bright +"
+msgstr ""
+
+msgid "Bright -"
+msgstr ""
+
 msgid "CPU:"
 msgstr "CPU:"
 
@@ -44,6 +50,9 @@ msgstr "Ledig datalagring:"
 
 msgid "Game"
 msgstr "Spel"
+
+msgid "Gun"
+msgstr ""
 
 msgid "High Perf"
 msgstr "Hög prestanda"
@@ -90,9 +99,6 @@ msgstr "Avsluta spelet"
 msgid "Resolution:"
 msgstr "Upplösning:"
 
-msgid "RetroAchievements"
-msgstr "RetroAchievements"
-
 msgid "Saver"
 msgstr "Spara"
 
@@ -116,3 +122,6 @@ msgstr "Volym +"
 
 msgid "Vol -"
 msgstr "Volym -"
+
+#~ msgid "RetroAchievements"
+#~ msgstr "RetroAchievements"
