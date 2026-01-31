@@ -42,7 +42,7 @@
   - Ability to add a "sort name" that take precedence over the (scraped) game name in metadata
   - New Keyboard Layout and Keyboard Variant options
 - Batocera Control Center (on-screen interface for global configuration and control, [hotkey][east] by default)
-- batocera-xtract for handling archives, systems with pcmanFM filemanager can use a small GUI and mouse context menus
+- batocera-xtract for handling archives, systems with PCManFM filemanager can use a small GUI and mouse context menus
 - dmd-play-rust is now used by default to play dmd images (performances)
 - Yamagi Quake II added which support more systems, especially lower-end hardware
 - Light gun support to the new Libretro Dolphin core
@@ -52,6 +52,7 @@
 - Enterprise 64/128 (via CLK emulator)
 - Xroar emulator as an option for the Color Computer (Tandy TRS-80)
 - PC60 as a separate system
+- Cemu for SM8550 devices
 ### Fixed
 - Not being able to exit emulator on first controller disconnection. i.e. Bluetooth disconnects.
 - Odin 2 variants wifi not working in some regions
@@ -69,6 +70,8 @@
 - You can now choose to create a Win32 WINE bottle only via the option to run 32-bit Windows games.
 - DOSBox Staging's working directory is now set to the games' folder, allowing for local and relative (img)mount and conf file references.
 - DOSBox Staging will fallback to a C:\> prompt inside the games' folder if its missing dosbox.cfg/.conf/.bat files.
+- Systems like WINE and DOSBOX can now be prepared from PCManFM context menu. Right click on file items inside supported ones.
+  to presetup them. This is mostly thought for startup files like dosbox.bat and autorun.cmd and for handling squashed archive files.
 ### Updated
 - Azahar to 2124
 - BigPEmu to v121
@@ -92,6 +95,7 @@
 - Libretro Flycast to 2.6
 - Libretro Genesis Plus GX to 21th of December 2025 build
 - Libretro Genesis Plus GX-Wide to 21th of October 2024 build
+- Libretro Holani to 0.9.9
 - Libretro MAME2003plus to 16th of January 2026 build
 - Libretro MAME to 0.284
 - Libretro MGBA to 17th of January 2026 build
@@ -140,7 +144,7 @@
 - Linux Kernel to 6.18.3
 - LabWC to 0.9.3
 - LLVM Project to 20.1.8
-- Mesa3D to 25.3.3
+- Mesa3D to 25.3.4
 - MPV to v0.41.0
 - Nvidia 580.xx legacy drivers to 580.126.09
 - Nvidia production drivers to 590.48.01
@@ -1786,7 +1790,7 @@
   b. Before shutting down, via SSH, run "mount -o remount,rw /boot && mv /boot/config64.txt /boot/config.txt" and then reboot
 - add: Support for Capcom Home Arcade "https://capcomhomearcade.com/uk"
 - add: Support for CHI Gameforce handheld "https://gameforce.fun/"
-- add: GSplus for Apple ][ and Apple IIGS
+- add: GSplus for Apple II and Apple IIGS
 - add: Tsugaru for FMTowns (x86_64, complete with support for CD-based games)
 - add: libretro/EmuSCV for Super Cassette Vision
 - add: libretro/Uzem for Uzebox (retro-minimalist 8-bit opensource console) (all except RPi1/RPi2/CHA)
