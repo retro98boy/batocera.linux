@@ -5,12 +5,12 @@ BOARD_DIR=$2
 IMAGES_DIR=$3
 
 # Download mainline U-Boot source
-wget -O u-boot-2025.04.tar.gz "https://github.com/u-boot/u-boot/archive/refs/tags/v2025.04.tar.gz"
-tar zxvf u-boot-2025.04.tar.gz
-cd u-boot-2025.04
+wget -O u-boot-2026.01.tar.gz "https://github.com/u-boot/u-boot/archive/refs/tags/v2026.01.tar.gz"
+tar zxvf u-boot-2026.01.tar.gz
+cd u-boot-2026.01
 
 # Apply patches
-PATCHES="${BR2_EXTERNAL_BATOCERA_PATH}/board/batocera/amlogic/s922x/patches/u-boot-2025.04/*.patch"
+PATCHES="${BR2_EXTERNAL_BATOCERA_PATH}/board/batocera/amlogic/s922x/patches/u-boot-2026.01/*.patch"
 for patch in $PATCHES
 do
     echo "Applying patch: $patch"
@@ -41,7 +41,7 @@ rm -rf "$EXTRACT_DIR" && mkdir "$EXTRACT_DIR"
 ./gxlimg/gxlimg -e "${BLOBS_DIR}/DDR.USB" "$EXTRACT_DIR"
 
 rm -f "${EXTRACT_DIR}/bl33.enc"
-./gxlimg/gxlimg -t bl3x -s u-boot-2025.04/u-boot.bin "${EXTRACT_DIR}/bl33.enc"
+./gxlimg/gxlimg -t bl3x -s u-boot-2026.01/u-boot.bin "${EXTRACT_DIR}/bl33.enc"
 ./gxlimg/gxlimg \
     -t fip \
     --bl2 "${EXTRACT_DIR}/bl2.sign" \

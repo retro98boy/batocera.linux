@@ -1,8 +1,8 @@
-diff --git a/arch/arm/dts/meson-g12b-a311d-cainiao-lemo-xiaoc-u-boot.dtsi b/arch/arm/dts/meson-g12b-a311d-cainiao-lemo-xiaoc-u-boot.dtsi
+diff --git a/arch/arm/dts/meson-g12b-a311d-cainiao-cniot-core-u-boot.dtsi b/arch/arm/dts/meson-g12b-a311d-cainiao-cniot-core-u-boot.dtsi
 new file mode 100644
 index 00000000..236f2468
 --- /dev/null
-+++ b/arch/arm/dts/meson-g12b-a311d-cainiao-lemo-xiaoc-u-boot.dtsi
++++ b/arch/arm/dts/meson-g12b-a311d-cainiao-cniot-core-u-boot.dtsi
 @@ -0,0 +1,7 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
@@ -11,12 +11,12 @@ index 00000000..236f2468
 + */
 +
 +#include "meson-g12-common-u-boot.dtsi"
-diff --git a/configs/cainiao-lemo-xiaoc_defconfig b/configs/cainiao-lemo-xiaoc_defconfig
+diff --git a/configs/cainiao-cniot-core_defconfig b/configs/cainiao-cniot-core_defconfig
 new file mode 100644
-index 00000000..6c4e2027
+index 00000000..0ee30015
 --- /dev/null
-+++ b/configs/cainiao-lemo-xiaoc_defconfig
-@@ -0,0 +1,109 @@
++++ b/configs/cainiao-cniot-core_defconfig
+@@ -0,0 +1,110 @@
 +# Reference from khadas-vim3_defconfig
 +CONFIG_ARM=y
 +CONFIG_SYS_BOARD="w400"
@@ -27,20 +27,20 @@ index 00000000..6c4e2027
 +CONFIG_CUSTOM_SYS_INIT_SP_ADDR=0x20000000
 +CONFIG_ENV_SIZE=0x2000
 +CONFIG_DM_GPIO=y
-+CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-g12b-a311d-cainiao-lemo-xiaoc"
++CONFIG_DEFAULT_DEVICE_TREE="amlogic/meson-g12b-a311d-cainiao-cniot-core"
 +CONFIG_OF_LIBFDT_OVERLAY=y
 +CONFIG_DM_RESET=y
 +CONFIG_MESON_G12A=y
 +CONFIG_SYS_LOAD_ADDR=0x1000000
 +CONFIG_DEBUG_UART_BASE=0xff803000
 +CONFIG_DEBUG_UART_CLOCK=24000000
-+CONFIG_IDENT_STRING=" cainiao-lemo-xiaoc"
++CONFIG_IDENT_STRING=" cainiao-cniot-core"
++CONFIG_PCI=y
 +CONFIG_DEBUG_UART=y
 +CONFIG_REMAKE_ELF=y
 +CONFIG_FIT=y
 +CONFIG_FIT_SIGNATURE=y
 +CONFIG_FIT_VERBOSE=y
-+CONFIG_LEGACY_IMAGE_FORMAT=y
 +CONFIG_OF_BOARD_SETUP=y
 +# CONFIG_DISPLAY_CPUINFO is not set
 +CONFIG_MISC_INIT_R=y
@@ -59,7 +59,7 @@ index 00000000..6c4e2027
 +CONFIG_CMD_USB_MASS_STORAGE=y
 +CONFIG_CMD_REGULATOR=y
 +CONFIG_OF_CONTROL=y
-+CONFIG_SYS_RELOC_GD_ENV_ADDR=y
++CONFIG_ENV_RELOC_GD_ENV_ADDR=y
 +CONFIG_ADC=y
 +CONFIG_SARADC_MESON=y
 +CONFIG_BUTTON=y
@@ -80,7 +80,8 @@ index 00000000..6c4e2027
 +CONFIG_DM_MDIO_MUX=y
 +CONFIG_ETH_DESIGNWARE_MESON8B=y
 +CONFIG_MDIO_MUX_MESON_G12A=y
-+CONFIG_NVME=y
++CONFIG_NVME_PCI=y
++CONFIG_PCIE_DW_MESON=y
 +CONFIG_MESON_G12A_USB_PHY=y
 +CONFIG_PINCTRL=y
 +CONFIG_PINCTRL_MESON_G12A=y
@@ -126,12 +127,12 @@ index 00000000..6c4e2027
 +CONFIG_ZLIB_UNCOMPRESS=y
 +CONFIG_BZIP2=y
 +CONFIG_ZSTD=y
-diff --git a/dts/upstream/src/arm64/amlogic/meson-g12b-a311d-cainiao-lemo-xiaoc.dts b/dts/upstream/src/arm64/amlogic/meson-g12b-a311d-cainiao-lemo-xiaoc.dts
+diff --git a/dts/upstream/src/arm64/amlogic/meson-g12b-a311d-cainiao-cniot-core.dts b/dts/upstream/src/arm64/amlogic/meson-g12b-a311d-cainiao-cniot-core.dts
 new file mode 100644
-index 00000000..ab71ff54
+index 00000000..1907347f
 --- /dev/null
-+++ b/dts/upstream/src/arm64/amlogic/meson-g12b-a311d-cainiao-lemo-xiaoc.dts
-@@ -0,0 +1,584 @@
++++ b/dts/upstream/src/arm64/amlogic/meson-g12b-a311d-cainiao-cniot-core.dts
+@@ -0,0 +1,600 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2019 BayLibre, SAS
@@ -149,13 +150,12 @@ index 00000000..ab71ff54
 +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
 +
 +/ {
-+	compatible = "cainiao,lemo-xiaoc", "amlogic,a311d", "amlogic,g12b";
-+	model = "CAINIAO LEMO XIAOC";
++	compatible = "cainiao,cniot-core", "amlogic,a311d", "amlogic,g12b";
++	model = "CAINIAO CNIoT-CORE";
 +
 +	aliases {
 +		serial0 = &uart_AO;
 +		ethernet0 = &ethmac;
-+		rtc0 = &hym8563;
 +		rtc99 = &vrtc;
 +	};
 +
@@ -165,7 +165,15 @@ index 00000000..ab71ff54
 +
 +	memory@0 {
 +		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0xee6b2800>; /* 4GB */
++		reg = <0x0 0x0 0x0 0x77359400>; /* 2GB */
++	};
++
++	fan0: pwm-fan {
++		compatible = "pwm-fan";
++		#cooling-cells = <2>;
++		cooling-levels = <0 120 170 220>;
++		pwms = <&pwm_cd 1 40000 1>;
++		tach-gpio = <&gpio GPIOA_4 GPIO_ACTIVE_HIGH>;
 +	};
 +
 +	gpio-keys-polled {
@@ -209,11 +217,11 @@ index 00000000..ab71ff54
 +		};
 +	};
 +
-+	ht6873: ht6873 {
++	ht6872: ht6872 {
 +		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&gpio GPIOA_9 GPIO_ACTIVE_HIGH>;
++		enable-gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
 +		VCC-supply = <&vdd_amp>;
-+		sound-name-prefix = "HT6873";
++		sound-name-prefix = "HT6872";
 +		status = "okay";
 +	};
 +
@@ -238,11 +246,12 @@ index 00000000..ab71ff54
 +		regulator-boot-on;
 +	};
 +
-+	vcc_5v: regulator-vcc-5v {
++	/* important to usb hub */
++	amp_power: regulator-amp-power {
 +		compatible = "regulator-fixed";
-+		/* enable-active-high; */
-+		/* gpio = <&gpio GPIOH_8 GPIO_ACTIVE_HIGH>; */
-+		regulator-name = "vcc_5v";
++		enable-active-high;
++		gpio = <&gpio GPIOH_8 GPIO_ACTIVE_HIGH>;
++		regulator-name = "amp_power";
 +		regulator-always-on;
 +		regulator-boot-on;
 +		vin-supply = <&dc_in>;
@@ -292,71 +301,48 @@ index 00000000..ab71ff54
 +		vin-supply = <&dc_in>;
 +	};
 +
-+	/* HDMI USB1 USB2 USB3 USB4 Type-C */
-+	vcc_5v_usb1: regulator-vcc-5v-usb1 {
++	usb_pwr: regulator-usb-pwr {
 +		compatible = "regulator-fixed";
 +		enable-active-high;
-+		gpio = <&gpio GPIOA_12 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc_5v_usb1";
++		gpio = <&gpio_ao GPIOAO_6 GPIO_ACTIVE_HIGH>; /* always keep usb hub reset pin high */
++		regulator-name = "usb_pwr";
 +		regulator-always-on;
 +		regulator-boot-on;
-+		vin-supply = <&vcc_5v>;
++		vin-supply = <&dc_in>;
 +	};
 +
-+	vcc_5v_usb2: regulator-vcc-5v-usb2 {
++	/*
++	 * The Type-C port on the host is switched with the four USB contacts on the side of the host via GPIOA_14.
++	 * Since the Type-C port on the host is either used for power supply or blocked by the dock,
++	 * switching USB 2.0 access to the four contacts on the side of the host is a better choice.
++	 * To use the Type-C port for data transmission,
++	 * you only need to set GPIOA_14 in the node below to a high level.
++	 */
++	usb_switch: regulator-usb-switch {
 +		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio GPIOA_2 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc_5v_usb2";
++		enable-active-low;
++		gpio = <&gpio GPIOA_14 GPIO_ACTIVE_LOW>;
++		regulator-name = "usb_switch";
 +		regulator-always-on;
 +		regulator-boot-on;
-+		vin-supply = <&vcc_5v>;
-+	};
-+
-+	vcc_5v_usb3: regulator-vcc-5v-usb3 {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio GPIOA_3 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc_5v_usb3";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_5v>;
-+	};
-+
-+	vcc_5v_usb4: regulator-vcc-5v-usb4 {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio GPIOA_4 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc_5v_usb4";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_5v>;
-+	};
-+
-+	vcc_5v_typec: regulator-vcc-5v-typec {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio GPIOA_11 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc_5v_typec";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc_5v>;
++		vin-supply = <&dc_in>;
 +	};
 +
 +	vdd_amp: regulator-vdd-amp {
 +		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio GPIOH_7 GPIO_ACTIVE_HIGH>;
 +		regulator-name = "vdd_amp";
 +		regulator-always-on;
 +		regulator-boot-on;
 +		vin-supply = <&dc_in>;
 +	};
 +
-+	/* Same as CAINIAO CNIoT-CORE */
 +	sound {
 +		compatible = "amlogic,axg-sound-card";
 +		model = "cainiao-cniot-core";
 +		audio-widgets = "Speaker", "Internal Speaker";
-+		audio-aux-devs = <&tdmout_a>, <&tdmout_b>, <&ht6873>;
++		audio-aux-devs = <&tdmout_a>, <&tdmout_b>, <&ht6872>;
 +		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
 +				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
 +				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
@@ -365,10 +351,10 @@ index 00000000..ab71ff54
 +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
 +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
 +				"TDM_B Playback", "TDMOUT_B OUT",
-+				"HT6873 INL", "ACODEC LOLP",
-+				"HT6873 INR", "ACODEC LORP",
-+				"Internal Speaker", "HT6873 OUTL",
-+				"Internal Speaker", "HT6873 OUTR";
++				"HT6872 INL", "ACODEC LOLP",
++				"HT6872 INR", "ACODEC LORP",
++				"Internal Speaker", "HT6872 OUTL",
++				"Internal Speaker", "HT6872 OUTR";
 +
 +		clocks = <&clkc CLKID_MPLL2>,
 +			 <&clkc CLKID_MPLL0>,
@@ -514,6 +500,23 @@ index 00000000..ab71ff54
 +	clock-latency = <50000>;
 +};
 +
++&cpu_thermal {
++	trips {
++		cpu_active: cpu-active {
++			temperature = <60000>; /* millicelsius */
++			hysteresis = <5000>; /* millicelsius */
++			type = "active";
++		};
++	};
++
++	cooling-maps {
++		map2 {
++			trip = <&cpu_active>;
++			cooling-device = <&fan0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
 +&ethmac {
 +	pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
 +	pinctrl-names = "default";
@@ -535,8 +538,6 @@ index 00000000..ab71ff54
 +		interrupt-parent = <&gpio_intc>;
 +		/* MAC_INTR on GPIOZ_14 */
 +		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>; /* tested by voltmeter */
-+
-+		realtek,led-data = <0xc160>;
 +	};
 +};
 +
@@ -564,18 +565,6 @@ index 00000000..ab71ff54
 +	};
 +};
 +
-+&i2c3 {
-+	status = "okay";
-+	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
-+	pinctrl-names = "default";
-+
-+	hym8563: rtc@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
 +&npu {
 +	status = "okay";
 +};
@@ -586,6 +575,12 @@ index 00000000..ab71ff54
 +	pinctrl-names = "default";
 +	clocks = <&xtal>;
 +	clock-names = "clkin0";
++};
++
++&pwm_cd {
++	status = "okay";
++	/* pinctrl-0 = <&pwm_d_a_pins>; */
++	pinctrl-names = "default";
 +};
 +
 +&pwm_ef {
@@ -616,11 +611,10 @@ index 00000000..ab71ff54
 +	#size-cells = <0>;
 +
 +	bus-width = <4>;
-+	max-frequency = <50000000>;
++	max-frequency = <100000000>;
 +	cap-sdio-irq;
 +	cap-sd-highspeed;
 +	non-removable;
-+	sd-uhs-ddr50;
 +
 +	/* WiFi firmware requires power in suspend */
 +	keep-power-in-suspend;
@@ -628,12 +622,12 @@ index 00000000..ab71ff54
 +	vmmc-supply = <&vsys_3v3>;
 +	vqmmc-supply = <&vddao_1v8>;
 +
-+	rtl8821cs: wifi@1 {
++	rtl8822cs: wifi@1 {
 +		reg = <1>;
 +		/*
 +		 * tested by voltmeter
 +		 * WL_REG_ON GPIOX_6
-+		 * WL_HOST_WAKE GPIOX_7
++		 * WL_WAKE_HOST GPIOX_5
 +		 */
 +	};
 +};
@@ -654,6 +648,29 @@ index 00000000..ab71ff54
 +	mmc-pwrseq = <&emmc_pwrseq>;
 +	vmmc-supply = <&vsys_3v3>;
 +	vqmmc-supply = <&vddao_1v8>;
++};
++
++/*
++ * GPIOH_4 is connected to 6 WS2812 LEDs.
++ * Reusing GPIOH_4 as SPI MOSI to control the WS2812 offers superior performance compared to the GPIO method.
++ */
++&spicc1_pins {
++	mux {
++		groups = "spi1_mosi";
++	};
++};
++
++/* Controlling WS2812 LEDs via spidev in user space. */
++&spicc1 {
++	status = "okay";
++	pinctrl-0 = <&spicc1_pins>;
++	pinctrl-names = "default";
++
++	spidev@0 {
++		compatible = "rohm,dh2228fv";
++		reg = <0>;
++		spi-max-frequency = <3340000>;
++	};
 +};
 +
 +&tdmif_a {
@@ -687,7 +704,7 @@ index 00000000..ab71ff54
 +	uart-has-rtscts;
 +
 +	bluetooth {
-+		compatible = "realtek,rtl8821cs-bt", "realtek,rtl8723bs-bt";
++		compatible = "realtek,rtl8822cs-bt";
 +		enable-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>; /* tested by voltmeter */
 +		host-wake-gpios = <&gpio GPIOX_18 GPIO_ACTIVE_HIGH>; /* tested by voltmeter */
 +		device-wake-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>; /* tested by voltmeter */
@@ -701,15 +718,15 @@ index 00000000..ab71ff54
 +};
 +
 +&usb2_phy0 {
-+	phy-supply = <&vcc_5v_usb2>;
++	phy-supply = <&amp_power>;
 +};
 +
 +&usb2_phy1 {
-+	phy-supply = <&vcc_5v_usb3>;
++	phy-supply = <&usb_switch>;
 +};
 +
 +&usb3_pcie_phy {
-+	phy-supply = <&vcc_5v_usb4>;
++	phy-supply = <&usb_pwr>;
 +};
 +
 +&usb {
