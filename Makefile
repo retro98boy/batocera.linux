@@ -11,6 +11,8 @@ MAKE_LLEVEL    ?= $(NPROC)
 BATCH_MODE     ?=
 PARALLEL_BUILD ?=
 DIRECT_BUILD   ?=
+DAYS           ?= 1
+BR_DIR         := $(PROJECT_DIR)/buildroot
 
 -include $(LOCAL_MK)
 
@@ -19,6 +21,28 @@ ifdef PARALLEL_BUILD
 	MAKE_OPTS  += -j$(MAKE_JLEVEL)
 	MAKE_OPTS  += -l$(MAKE_LLEVEL)
 endif
+
+# List of packages that are always good to rebuild for versioning/stamps etc
+MANDATORY_REBUILD_PKGS := batocera-es-system batocera-configgen batocera-system batocera-splash
+
+# Across all batocera & buildroot packages find any updates and add to a list to rebuild
+GIT_PACKAGES_TO_REBUILD := $(shell ( \
+							  git log --since="$(DAYS) days ago" --name-only --format=%n -- $(PROJECT_DIR)/package/ \
+							; cd $(BR_DIR) && git log --since="$(DAYS) days ago" --name-only --format=%n -- package/ \
+						  ) \
+						| grep -E '^package/' \
+						| sed -r -e 's:package/batocera/(audio|boot|cases|controllers|core|database|emulationstation|emulators|firmwares|fonts|gpu|kodi|leds|libraries|looks|network|ports|screens|toolchain|utils|utils-host|wine)/([^/]+)/.*:\2:' \
+						         -e 's:package/([^/]+)/.*:\1:' \
+						| sort -u)
+
+# List of all TARGET packages to be reset (Git-modified + Mandatory)
+TARGET_PKGS := $(GIT_PACKAGES_TO_REBUILD) $(MANDATORY_REBUILD_PKGS)
+
+# Cheats way, add 'host-' to each target package to ensure we are covered
+HOST_PKGS_TO_RESET := $(foreach pkg,$(TARGET_PKGS),host-$(pkg))
+
+# Final list is a combination of all target and host packages
+PKGS_TO_RESET := $(sort $(TARGET_PKGS) $(HOST_PKGS_TO_RESET))
 
 TARGETS := $(sort $(shell find $(PROJECT_DIR)/configs/ -name 'b*.board' | sed -n 's/.*\/batocera-\(.*\).board/\1/p'))
 UID  := $(shell id -u)
@@ -160,6 +184,28 @@ dl-dir:
 
 %-build-cmd:
 	@echo $(MAKE_BUILDROOT)
+
+%-refresh: batocera-docker-image output-dir-%
+	$(if $(PARALLEL_BUILD),,$(error "PARALLEL_BUILD=y must be set for %-refresh"))
+	@echo "--- Refresh & Targeted Rebuild Trigger (DAYS=$(DAYS)) ---"
+
+	@if [ -n "$(PKGS_TO_RESET)" ]; then \
+		echo "Total packages to reset: $(PKGS_TO_RESET)"; \
+		for pkg in $(PKGS_TO_RESET); do \
+			echo "Surgically removing $$pkg from build and per-package directories..."; \
+			rm -rf $(OUTPUT_DIR)/$*/build/$$pkg-*; \
+			rm -rf $(OUTPUT_DIR)/$*/per-package/$$pkg; \
+		done; \
+	else \
+		echo "No packages to reset."; \
+	fi
+
+	@echo "--- Removing Host and Target directories ---"
+	rm -rf $(OUTPUT_DIR)/$*/host
+	rm -rf $(OUTPUT_DIR)/$*/target
+	rm -rf $(OUTPUT_DIR)/$*/target2
+	
+	@$(MAKE) $*-build
 
 %-cleanbuild: %-clean %-build
 	@echo
