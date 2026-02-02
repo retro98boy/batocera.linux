@@ -1,8 +1,8 @@
 # 2026/xx/xx - batocera.linux 43 - Glasswing
 ### Special Notes
 - x86_64 Handhelds with AMD and Intel graphics will be supported on the preferred x86-64-v3 image using Wayland and the LabWC compositor.
-  Desktop devices should continue to use the x86-64 image with Xorg.
-  Note: Nvidia drivers are currently not included in the x86-64-v3 image.
+  Note: Nvidia drivers are currently included in the x86-64-v3 image but considered experiemental.
+  Desktop Nvidia users should continue to use the x86-64 image with Xorg for stability.
 - The ability to use a custom.sh script is deprecated in this version. If you already used such a script, then it will be one time transformed into a service.
   Please use the services for future scripts and refer to our [Wikipedia](https://wiki.batocera.org/scripting_services_rules_examples)
 - TheXTech update in v43 needs minimum of 1.3.7 assets, ensure you update accordingly.
@@ -72,16 +72,18 @@
 - DOSBox Staging will fallback to a C:\> prompt inside the games' folder if its missing dosbox.cfg/.conf/.bat files.
 - Systems like WINE and DOSBOX can now be prepared from PCManFM context menu. Right click on file items inside supported ones.
   to presetup them. This is mostly thought for startup files like dosbox.bat and autorun.cmd and for handling squashed archive files.
+- RPCS3 PS Move (light gun) mapping simplified. D-pad buttons are now PS Move face buttons. Check wiki for more info.
 ### Updated
 - Azahar to 2124
 - BigPEmu to v121
+- Cemu to 22nd of January 2026 build
 - CLK to 2026-01-06
 - Dolphin-Emu to 2512-99
 - DXX-Rebirth to May 25, 2025
 - EDuke32 to Oct 10, 2025
 - Flycast to 2.6
 - FS-UAE to v3.2.35
-- Groovy MAME to 0.284
+- Groovy MAME to 0.285
 - Hatari to v2.6.1
 - Hurrican to Jul 26, 2025 build
 - Jazz2 to 3.5.0
@@ -97,7 +99,7 @@
 - Libretro Genesis Plus GX-Wide to 21th of October 2024 build
 - Libretro Holani to 0.9.9
 - Libretro MAME2003plus to 16th of January 2026 build
-- Libretro MAME to 0.284
+- Libretro MAME to 0.285
 - Libretro MGBA to 17th of January 2026 build
 - Libretro Mesen to 24th of October 2024 build
 - Libretro Nestopia to 10th of January 2026 build
@@ -115,10 +117,11 @@
 - OpenJKDF2 to v0.9.8
 - OpenMOHAA to v0.82.1
 - Play! to 0.72
-- PCSX2 to v2.6.2
+- PCSX2 to v2.6.3
 - RClone to v1.72.1
 - RetroArch to 1.22.2
 - RPCS3 to v0.0.39
+- Ruffle to 31th of January 2026 nightly build
 - ShadPS4 Plus to SHAD_PS4_PLUS_0_12_0_A
 - Sonic 2013 to 1.3.3
 - Sonic CD to 1.3.3
