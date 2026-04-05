@@ -8,6 +8,8 @@
 
 - CAINIAO LEMO XIAOC
 
+- CAINIAO XiaoYi Pro
+
 - DAMO Cockpit8250
 
 - TIANNUO TN3399_V3
