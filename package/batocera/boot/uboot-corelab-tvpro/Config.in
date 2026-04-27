@@ -1,0 +1,4 @@
+config BR2_PACKAGE_UBOOT_CORELAB_TVPRO
+    bool "uboot files for CoreLab TVPro"
+    help
+        uboot files for CoreLab TVPro
