@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: controlcenter\n"
-"PO-Revision-Date: 2026-01-30 21:06+0100\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-03-25 08:40+0100\n"
 "Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: fr\n"
@@ -9,10 +10,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.12.1\n"
+"X-Generator: Poedit 3.9\n"
 
 msgid "AC"
 msgstr "AC"
+
+msgid "Audio Source"
+msgstr "Zdroj zvuku"
 
 msgid "Balanced"
 msgstr "Vyvážený"
@@ -53,17 +57,29 @@ msgstr "Hra"
 msgid "Gun"
 msgstr "Zbraň"
 
+msgid "High (60fps)"
+msgstr "Vysoké (60fps)"
+
 msgid "High Perf"
 msgstr "Vysoký výkon"
 
 msgid "Kill it!"
-msgstr "Zabiť to"
+msgstr "Zabiť to!"
+
+msgid "Low (30fps)"
+msgstr "Nízke (30fps)"
 
 msgid "Manual"
 msgstr "Ručne"
 
 msgid "Map"
 msgstr "Mapa"
+
+msgid "Microphone"
+msgstr "Mikrofón"
+
+msgid "Mid (30fps)"
+msgstr "Stredné (30fps)"
 
 msgid "Mute Sound"
 msgstr "Stlmiť zvuk"
@@ -73,6 +89,9 @@ msgstr "Sieťová IP adresa:"
 
 msgid "Next"
 msgstr "Ďalšie"
+
+msgid "No Audio"
+msgstr "Bez zvuku"
 
 msgid "OFF"
 msgstr "Vypnuté"
@@ -89,11 +108,23 @@ msgstr "Režim napájania"
 msgid "Previous"
 msgstr "Predošlé"
 
+msgid "Quality"
+msgstr "Kvalita"
+
 msgid "Quick Access"
 msgstr "Rýchly prístup"
 
 msgid "Quit game"
 msgstr "Ukončiť hru"
+
+msgid "Record"
+msgstr "Nahrať"
+
+msgid "Record All Screens"
+msgstr "Nahrať všetky obrazovky"
+
+msgid "Recording in progress"
+msgstr "Prebieha nahrávanie"
 
 msgid "Resolution:"
 msgstr "Rozlíšenie:"
@@ -104,20 +135,32 @@ msgstr "Ukladač"
 msgid "Select"
 msgstr "Vybrať"
 
-msgid "Sound & Power"
-msgstr "Zvuk a napájanie"
-
 msgid "Stuck emulator?"
 msgstr "Zaseknutý emulátor?"
 
 msgid "System"
 msgstr "Systém"
 
+msgid "System (Default)"
+msgstr "Systém (predvolené)"
+
 msgid "Temp:"
 msgstr "Dočasný adresár:"
+
+msgid "Toggle"
+msgstr "Prepnúť"
+
+msgid "Touch keyboard"
+msgstr "Dotyková klávesnica"
+
+msgid "Ultra (60fps)"
+msgstr "Ultra (60fps)"
 
 msgid "Vol +"
 msgstr "Zvuk +"
 
 msgid "Vol -"
 msgstr "Zvuk -"
+
+#~ msgid "Sound & Power"
+#~ msgstr "Zvuk a napájanie"

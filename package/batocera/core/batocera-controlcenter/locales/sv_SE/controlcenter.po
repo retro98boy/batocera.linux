@@ -1,25 +1,25 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: controlcenter\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
-"Language-Team: \n"
+"Last-Translator: Daniel Nylander <daniel@danielnylander.se>\n"
+"Language-Team: Swedish\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.8\n"
 
 msgid "AC"
-msgstr "Extern ström"
+msgstr ""
+
+msgid "Audio Source"
+msgstr "Ljudkälla"
 
 msgid "Balanced"
 msgstr "Balanserad"
 
 msgid "Batocera"
-msgstr "Batocera"
+msgstr ""
 
 msgid "Battery"
 msgstr "Batteri"
@@ -31,13 +31,13 @@ msgid "Bright -"
 msgstr "Ljus -"
 
 msgid "CPU:"
-msgstr "CPU:"
+msgstr ""
 
 msgid "Cancel"
 msgstr "Avbryt"
 
 msgid "Close"
-msgstr "Stäng"
+msgstr "Nära"
 
 msgid "Confirm"
 msgstr "Bekräfta"
@@ -46,7 +46,7 @@ msgid "Default"
 msgstr "Standard"
 
 msgid "Free data storage:"
-msgstr "Ledig datalagring:"
+msgstr "Gratis lagring av data:"
 
 msgid "Game"
 msgstr "Spel"
@@ -54,11 +54,17 @@ msgstr "Spel"
 msgid "Gun"
 msgstr "Pistol"
 
+msgid "High (60fps)"
+msgstr "Hög (60 bilder per sekund)"
+
 msgid "High Perf"
-msgstr "Hög prestanda"
+msgstr "Hög perfektion"
 
 msgid "Kill it!"
 msgstr "Döda den!"
+
+msgid "Low (30fps)"
+msgstr "Låg (30 bilder per sekund)"
 
 msgid "Manual"
 msgstr "Manuell"
@@ -66,8 +72,14 @@ msgstr "Manuell"
 msgid "Map"
 msgstr "Karta"
 
+msgid "Microphone"
+msgstr "Mikrofon"
+
+msgid "Mid (30fps)"
+msgstr "Mellan (30 bilder per sekund)"
+
 msgid "Mute Sound"
-msgstr "Stäng av ljud"
+msgstr "Stäng av ljudet"
 
 msgid "Network IP address:"
 msgstr "IP-adress för nätverk:"
@@ -75,20 +87,26 @@ msgstr "IP-adress för nätverk:"
 msgid "Next"
 msgstr "Nästa"
 
+msgid "No Audio"
+msgstr "Inget ljud"
+
 msgid "OFF"
-msgstr "AV"
+msgstr ""
 
 msgid "ON"
-msgstr "PÅ"
+msgstr ""
 
 msgid "Plane Mode"
-msgstr "Flygplansläge"
+msgstr "Planläge"
 
 msgid "Power Mode"
-msgstr "Energiläge"
+msgstr "Strömläge"
 
 msgid "Previous"
 msgstr "Föregående"
+
+msgid "Quality"
+msgstr "Kvalitet"
 
 msgid "Quick Access"
 msgstr "Snabb åtkomst"
@@ -96,32 +114,47 @@ msgstr "Snabb åtkomst"
 msgid "Quit game"
 msgstr "Avsluta spelet"
 
+msgid "Record"
+msgstr "Skiva"
+
+msgid "Record All Screens"
+msgstr "Spela in alla skärmar"
+
+msgid "Recording in progress"
+msgstr "Pågående inspelning"
+
 msgid "Resolution:"
-msgstr "Upplösning:"
+msgstr ""
 
 msgid "Saver"
-msgstr "Spara"
+msgstr "Sparare"
 
 msgid "Select"
 msgstr "Välj"
 
-msgid "Sound & Power"
-msgstr "Ljud och energi"
-
 msgid "Stuck emulator?"
-msgstr "Emulator fastnat?"
+msgstr "Har emulatorn fastnat?"
 
 msgid "System"
-msgstr "System"
+msgstr ""
+
+msgid "System (Default)"
+msgstr "System (standard)"
 
 msgid "Temp:"
-msgstr "Temp:"
+msgstr ""
+
+msgid "Toggle"
+msgstr ""
+
+msgid "Touch keyboard"
+msgstr "Tangentbord med pekskärm"
+
+msgid "Ultra (60fps)"
+msgstr "Ultra (60 bilder per sekund)"
 
 msgid "Vol +"
-msgstr "Volym +"
+msgstr "Vol +"
 
 msgid "Vol -"
-msgstr "Volym -"
-
-#~ msgid "RetroAchievements"
-#~ msgstr "RetroAchievements"
+msgstr "Vol -"

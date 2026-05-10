@@ -91,7 +91,7 @@ case ${1,,} in
         ES_PID=$(check_esrun)
         if [[ "${1,,}" == "--shutdown" && $ES_PID -ne 0 ]]; then
             /etc/init.d/S31emulationstation stop
-            shutdown -h now; ret=11
+            shutdown -P -h now; ret=11
         elif [[ "${1,,}" == "--reboot" && $ES_PID -ne 0 ]]; then
             /etc/init.d/S31emulationstation stop
             shutdown -r now; ret=10
@@ -107,7 +107,7 @@ case ${1,,} in
         ret=$?
         [[ $ret -eq 0 ]] && /etc/init.d/S31emulationstation resume
         [[ $ret -eq 10 ]] && shutdown -r now
-        [[ $ret -eq 11 ]] && shutdown -h now
+        [[ $ret -eq 11 ]] && shutdown -P -h now
     ;;
 
     --version|--arch|--update)
@@ -121,6 +121,7 @@ case ${1,,} in
             NET_VER=$(wget -q -O - "$URL")
             [[ $? -eq 0 ]] || NET_VER="Connection failed!"
             echo "Installed:   $VER"
+            echo "Modified:    $(batocera-version --extra)"
             echo "Webversion:  $NET_VER"
             echo "Update URL:  $(dirname $URL)"
             echo "Branch:      ${BRANCH^^}-branch searched"

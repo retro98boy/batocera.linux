@@ -11,6 +11,7 @@ MOONLIGHT_QT_GIT_SUBMODULES = YES
 MOONLIGHT_QT_LICENSE = GPLv3
 
 MOONLIGHT_QT_DEPENDENCIES = \
+	moonlight-common \
 	qt6base \
 	qt6svg \
 	qt6declarative \
@@ -38,6 +39,10 @@ ifeq ($(BR2_PACKAGE_LIBVA),y)
 MOONLIGHT_QT_DEPENDENCIES += libva
 else
 MOONLIGHT_QT_CONF_OPTS += CONFIG+=disable-libva
+endif
+
+ifeq ($(BR2_PACKAGE_LIBVA_INTEL_DRIVER),y)
+    MOONLIGHT_QT_DEPENDENCIES += libva-intel-driver intel-mediadriver
 endif
 
 ifeq ($(BR2_PACKAGE_LIBVDPAU),y)

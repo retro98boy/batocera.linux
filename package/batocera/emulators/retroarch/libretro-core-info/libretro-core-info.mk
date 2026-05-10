@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBRETRO_CORE_INFO_VERSION = v1.21.1
+LIBRETRO_CORE_INFO_VERSION = 28f18a4d2fd75a88a8dff32ab60ee1c3b9f8a162
 LIBRETRO_CORE_INFO_SITE = \
     $(call github,libretro,libretro-core-info,$(LIBRETRO_CORE_INFO_VERSION))
 LIBRETRO_CORE_INFO_LICENSE = GPL
@@ -47,6 +47,8 @@ define LIBRETRO_CORE_INFO_INSTALL_TARGET_CMDS
 	    fbalpha_libretro.info
 	cd $(TARGET_DIR)/usr/share/libretro/info && ln -sf mame2000_libretro.info \
 	    imame4all_libretro.info
+	cd $(TARGET_DIR)/usr/share/libretro/info && ln -sf ep128emu_core_libretro.info \
+	    ep128emu-core_libretro.info
 
 	# mamevirtual_libretro.so      => no info found
 	# superflappybirds_libretro.so => no info found

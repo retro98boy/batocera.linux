@@ -7,10 +7,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, NotRequired, TypedDict, cast
 
 from ... import controllersConfig
-from ...batoceraPaths import DEFAULTS_DIR, SAVES, ES_GAMES_METADATA, mkdir_if_not_exists
+from ...batoceraPaths import DEFAULTS_DIR, ES_GAMES_METADATA, SAVES, mkdir_if_not_exists
 from ...controller import Controller
 from ...settings.unixSettings import UnixSettings
-from ...utils import bezels as bezelsUtil, videoMode, vulkan, esSettings, metadata
+from ...utils import bezels as bezelsUtil, esSettings, metadata as metadataUtils, videoMode, vulkan
 from ..hatari.hatariGenerator import HATARI_CONFIG
 from . import libretroMAMEConfig, libretroOptions
 from .libretroPaths import (
@@ -59,11 +59,11 @@ systemToBluemsx = {'msx': '"MSX2"', 'msx1': '"MSX2"', 'msx2': '"MSX2"', 'colecov
 coreToRetroachievements = {'arduous', 'beetle-saturn', 'blastem', 'bluemsx', 'bsnes', 'bsnes_hd', 'cap32', 'desmume', 'duckstation', 'fbneo', 'fceumm', 'flycast', 'flycastvl', 'freechaf', 'freeintv', 'gambatte', 'genesisplusgx', 'genesisplusgx-expanded', 'genesisplusgx-wide','handy', 'kronos', 'mednafen_lynx', 'mednafen_ngp', 'mednafen_psx', 'mednafen_supergrafx', 'mednafen_wswan', 'melonds', 'mesen', 'mesens', 'mgba', 'mupen64plus-next', 'neocd', 'o2em', 'opera', 'parallel_n64', 'pce', 'pce_fast', 'pcfx', 'pcsx_rearmed', 'picodrive', 'pokemini', 'potator', 'ppsspp', 'prosystem', 'quasi88', 'snes9x', 'sameduck', 'snes9x_next', 'stella', 'stella2014', 'swanstation', 'uzem', 'vb', 'vba-m', 'vecx', 'virtualjaguar', 'wasm4'}
 
 # Define systems NOT compatible with rewind option
-systemNoRewind = {'sega32x', 'psx', 'zxspectrum', 'n64', 'dreamcast', 'atomiswave', 'naomi', 'saturn', 'dice'}
+systemNoRewind = {'sega32x', 'psx', 'zxspectrum', 'n64', 'dreamcast', 'atomiswave', 'naomi', 'saturn', 'dice', 'pd777'}
 # 'o2em', 'mame', 'neogeocd', 'fbneo'
 
 # Define systems NOT compatible with run-ahead option (warning: this option is CPU intensive!)
-systemNoRunahead = {'sega32x', 'n64', 'dreamcast', 'atomiswave', 'naomi', 'neogeocd', 'saturn', 'dice'}
+systemNoRunahead = {'sega32x', 'n64', 'dreamcast', 'atomiswave', 'naomi', 'neogeocd', 'saturn', 'dice', 'pd777'}
 
 # Define the libretro device type corresponding to the libretro CORE (when needed)
 coreToP1Device = {'atari800': '513', 'cap32': '513', '81': '259', 'fuse': '769'}
@@ -558,7 +558,7 @@ def createLibretroConfig(
             bezel = None
         # Check if game natively supports widescreen from metadata (not widescreen hack) (for easy scalability ensure all values for respective systems start with core name and end with "-autowidescreen")
         elif system.config.get_bool(f"{systemCore}-autowidescreen"):
-            metadata = metadata.getGamesMetaData(ES_GAMES_METADATA, system.name, rom)
+            metadata = metadataUtils.get_games_meta_data(ES_GAMES_METADATA, system.name, rom)
             if metadata.get("video_widescreen") == "true":
                 index = str(ratioIndexes.index("16/9"))
                 # Easy way to disable bezels if setting to 16/9
@@ -1005,8 +1005,8 @@ def configureGunInputsForPlayer(
 
         # Override with game-specific metadata
         for action in action_to_wiimote:
-            if f"gun_{action}" in metadata and metadata[f"gun_{action}"]:
-                action_to_wiimote[action] = metadata[f"gun_{action}"]
+            if (gun_action := metadata.get(f"gun_{action}")):
+                action_to_wiimote[action] = gun_action
 
         # Gun button names to virtual light gun mapping in RetroArch
         action_to_gun = {"trigger": 1, "action": 2, "start": 3, "select": 4, "sub1": 5, "sub2": 6,

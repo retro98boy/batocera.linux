@@ -4,13 +4,14 @@
 #
 ################################################################################
 
-PLAY_VERSION = 0.72
+PLAY_VERSION = 0.73
 PLAY_SITE = https://github.com/jpd002/Play-.git
 PLAY_SITE_METHOD = git
 PLAY_GIT_SUBMODULES = YES
 PLAY_LICENSE = BSD
+PLAY_EMULATOR_INFO = play.emulator.yml
 
-PLAY_DEPENDENCIES = openal qt6base sqlite ecm libevdev
+PLAY_DEPENDENCIES = openal qt6base sqlite ecm libevdev eudev
 
 PLAY_CONF_OPTS += -DCMAKE_BUILD_TYPE=Release
 PLAY_CONF_OPTS += -DBUILD_SHARED_LIBS=OFF
@@ -42,3 +43,4 @@ endef
 PLAY_POST_INSTALL_TARGET_HOOKS += PLAY_EVMAPY
 
 $(eval $(cmake-package))
+$(eval $(emulator-info-package))

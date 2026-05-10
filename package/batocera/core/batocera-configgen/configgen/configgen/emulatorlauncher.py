@@ -9,35 +9,35 @@ profiler.start()
 
 ### import always needed ###
 import argparse
+import contextlib
+import ctypes
 import json
 import logging
 import os
 import signal
 import subprocess
-import time
 import threading
-import pyudev
-os.environ["PYSDL2_DLL_PATH"] = "/usr/lib"
-import sdl2
-import sdl2.ext
-import ctypes
+import time
+from copy import deepcopy
 from pathlib import Path
 from sys import exit
-from copy import deepcopy
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, cast
 
-from . import controllersConfig as controllers
-from .batoceraPaths import BATOCERA_SHARE_DIR, SAVES, SYSTEM_SCRIPTS, USER_SCRIPTS, ES_GAMES_METADATA
+import pyudev
+import sdl2
+
+from .batoceraPaths import BATOCERA_SHARE_DIR, ES_GAMES_METADATA, SAVES, SYSTEM_SCRIPTS, USER_SCRIPTS
 from .controller import Controller
 from .Emulator import Emulator
 from .exceptions import BadCommandLineArguments, BaseBatoceraException, BatoceraException, UnexpectedEmulatorExit
 from .generators import get_generator
 from .gun import Gun
-from .utils import bezels as bezelsUtil, videoMode, wheelsUtils, metadata
+from .utils import bezels as bezelsUtil, metadata, videoMode, wheelsUtils
+from .utils.evmapy import evmapy
 from .utils.hotkeygen import set_hotkeygen_context
 from .utils.logger import setup_logging
-from .utils.squashfs import squashfs_rom
-from .utils.evmapy import evmapy
+from .utils.squashfs import mount_squashfs
+from .utils.overlayfs import mount_overlayfs
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -57,12 +57,14 @@ _active_player_controllers = []
 _evmapy_instance = None
 
 def main(args: argparse.Namespace, maxnbplayers: int) -> int:
+    original_rom = args.rom
+
     # squashfs roms if squashed
-    if args.rom.suffix == ".squashfs":
-        with squashfs_rom(args.rom) as rom:
-            return start_rom(args, maxnbplayers, rom, args.rom)
+    if original_rom.suffix == ".squashfs":
+        with mount_squashfs(original_rom) as squash_rom:
+            return start_rom(args, maxnbplayers, squash_rom, original_rom)
     else:
-        return start_rom(args, maxnbplayers, args.rom, args.rom)
+        return start_rom(args, maxnbplayers, original_rom, original_rom)
 
 def start_rom(args: argparse.Namespace, maxnbplayers: int, rom: Path, original_rom: Path) -> int:
     global _active_player_controllers, _evmapy_instance
@@ -72,12 +74,12 @@ def start_rom(args: argparse.Namespace, maxnbplayers: int, rom: Path, original_r
     # Initialize the global state with the initial controller list
     with _player_controllers_lock:
         _active_player_controllers = list(player_controllers)
-    
+
     # Start the background monitor thread.
     monitor_thread = threading.Thread(target=_controller_monitor_thread, daemon=True)
 
     # find the system to run
-    systemName = args.system
+    systemName: str = args.system
     _logger.debug("Running system: %s", systemName)
     system = Emulator(args, original_rom)
 
@@ -92,130 +94,155 @@ def start_rom(args: argparse.Namespace, maxnbplayers: int, rom: Path, original_r
             _logger.debug('emulator: %s', system.config.emulator)
 
     # metadata
-    md = metadata.getGamesMetaData(ES_GAMES_METADATA, systemName, rom)
+    md = metadata.get_games_meta_data(ES_GAMES_METADATA, systemName, rom)
 
     guns = Gun.get_and_precalibrate_all(system, rom)
 
     with wheelsUtils.configure_wheels(player_controllers, system, md) as (player_controllers, wheels):
         # find the generator
-        generator = get_generator(system.config.emulator)
+        generator = get_generator(system.config.emulator, system.config.core)
 
-        # the resolution must be changed before configuration while the configuration may depend on it (ie bezels)
-        wantedGameMode = generator.getResolutionMode(system.config)
-        systemMode = videoMode.getCurrentMode()
+        with (
+            mount_overlayfs(rom, SAVES / original_rom.parent.name / original_rom.stem)
+            if original_rom.suffix == ".squashfs" and generator.writesToRom(system.config)
+            else contextlib.nullcontext(rom)
+        ) as rom:
+            # the resolution must be changed before configuration while the configuration may depend on it (ie bezels)
+            wantedGameMode = generator.getResolutionMode(system.config)
+            systemMode = videoMode.getCurrentMode()
 
-        resolutionChanged = False
-        mouseChanged = False
-        exitCode = 0
-        try:
-            # lower the resolution if mode is auto
-            newsystemMode = systemMode  # newsystemMode is the mode after minmax (ie in 1K if tv was in 4K), systemmode is the mode before (ie in es)
-            if system.config.video_mode == "" or system.config.video_mode == "default":
-                _logger.debug("minTomaxResolution")
-                _logger.debug("video mode before minmax: %s", systemMode)
-                videoMode.minTomaxResolution()
-                newsystemMode = videoMode.getCurrentMode()
-                if newsystemMode != systemMode:
+            resolutionChanged = False
+            mouseChanged = False
+            exitCode = 0
+            try:
+                # lower the resolution if mode is auto
+                newsystemMode = systemMode  # newsystemMode is the mode after minmax (ie in 1K if tv was in 4K), systemmode is the mode before (ie in es)
+                if system.config.video_mode == "" or system.config.video_mode == "default":
+                    _logger.debug("minTomaxResolution")
+                    _logger.debug("video mode before minmax: %s", systemMode)
+                    videoMode.minTomaxResolution()
+                    newsystemMode = videoMode.getCurrentMode()
+                    if newsystemMode != systemMode:
+                        resolutionChanged = True
+
+                _logger.debug("current video mode: %s", newsystemMode)
+                _logger.debug("wanted video mode: %s", wantedGameMode)
+
+                if wantedGameMode != 'default' and wantedGameMode != newsystemMode:
+                    videoMode.changeMode(wantedGameMode)
                     resolutionChanged = True
+                gameResolution = videoMode.getCurrentResolution()
 
-            _logger.debug("current video mode: %s", newsystemMode)
-            _logger.debug("wanted video mode: %s", wantedGameMode)
+                # if resolution is reversed (ie ogoa boards), reverse it in the gameResolution to have it correct
+                if videoMode.isResolutionReversed():
+                    x = gameResolution["width"]
+                    gameResolution["width"]  = gameResolution["height"]
+                    gameResolution["height"] = x
+                _logger.debug('resolution: %sx%s', gameResolution["width"], gameResolution["height"])
 
-            if wantedGameMode != 'default' and wantedGameMode != newsystemMode:
-                videoMode.changeMode(wantedGameMode)
-                resolutionChanged = True
-            gameResolution = videoMode.getCurrentResolution()
+                # savedir: create the save directory if not already done
+                dirname = SAVES / system.name
+                if not dirname.exists():
+                    dirname.mkdir(parents=True)
 
-            # if resolution is reversed (ie ogoa boards), reverse it in the gameResolution to have it correct
-            if videoMode.isResolutionReversed():
-                x = gameResolution["width"]
-                gameResolution["width"]  = gameResolution["height"]
-                gameResolution["height"] = x
-            _logger.debug('resolution: %sx%s', gameResolution["width"], gameResolution["height"])
+                # core
+                effectiveCore = ""
+                if "core" in system.config and system.config.core is not None:
+                    effectiveCore = system.config.core
 
-            # savedir: create the save directory if not already done
-            dirname = SAVES / system.name
-            if not dirname.exists():
-                dirname.mkdir(parents=True)
+                if generator.getMouseMode(system.config, rom):
+                    mouseChanged = True
+                    videoMode.changeMouse(True)
 
-            # core
-            effectiveCore = ""
-            if "core" in system.config and system.config.core is not None:
-                effectiveCore = system.config.core
+                # SDL VSync is a big deal on OGA and RPi4
+                if not system.config.get_bool('sdlvsync', True):
+                    system.config["sdlvsync"] = '0'
+                else:
+                    system.config["sdlvsync"] = '1'
+                os.environ.update({'SDL_RENDER_VSYNC': system.config["sdlvsync"]})
 
-            if generator.getMouseMode(system.config, rom):
-                mouseChanged = True
-                videoMode.changeMouse(True)
+                # run a script before emulator starts
+                callExternalScripts(SYSTEM_SCRIPTS, "gameStart", [systemName, system.config.emulator, effectiveCore, rom])
+                callExternalScripts(USER_SCRIPTS, "gameStart", [systemName, system.config.emulator, effectiveCore, rom])
 
-            # SDL VSync is a big deal on OGA and RPi4
-            if not system.config.get_bool('sdlvsync', True):
-                system.config["sdlvsync"] = '0'
-            else:
-                system.config["sdlvsync"] = '1'
-            os.environ.update({'SDL_RENDER_VSYNC': system.config["sdlvsync"]})
+                # run the emulator
+                _evmapy_instance = evmapy(systemName, system.config.emulator, effectiveCore, original_rom, player_controllers, guns)
+                with (
+                    _evmapy_instance,
+                    set_hotkeygen_context(generator, system)
+                ):
+                    # change directory if wanted
+                    executionDirectory = generator.executionDirectory(system.config, rom)
+                    if executionDirectory is not None:
+                        os.chdir(executionDirectory)
 
-            # run a script before emulator starts
-            callExternalScripts(SYSTEM_SCRIPTS, "gameStart", [systemName, system.config.emulator, effectiveCore, rom])
-            callExternalScripts(USER_SCRIPTS, "gameStart", [systemName, system.config.emulator, effectiveCore, rom])
+                    cmd = generator.generate(system, rom, player_controllers, md, guns, wheels, gameResolution)
 
-            # run the emulator
-            _evmapy_instance = evmapy(systemName, system.config.emulator, effectiveCore, original_rom, player_controllers, guns)
-            with (
-                _evmapy_instance,
-                set_hotkeygen_context(generator, system)
-            ):
-                # change directory if wanted
-                executionDirectory = generator.executionDirectory(system.config, rom)
-                if executionDirectory is not None:
-                    os.chdir(executionDirectory)
+                    if system.config.get_bool('hud_support'):
+                        hud_bezel = getHudBezel(system, generator, rom, gameResolution, system.guns_borders_size_name(guns), system.guns_border_ratio_type(guns))
+                        if ((hud := system.config.get('hud')) and hud != "none") or hud_bezel is not None:
+                            cmd.env["MANGOHUD_DLSYM"] = "1"
+                            hudconfig = getHudConfig(system, args.systemname, system.config.emulator, effectiveCore, rom, hud_bezel)
+                            hud_config_file = Path('/var/run/hud.config')
+                            with hud_config_file.open('w') as f:
+                                f.write(hudconfig)
+                            cmd.env["MANGOHUD_CONFIGFILE"] = hud_config_file
+                            if not generator.hasInternalMangoHUDCall():
+                                cmd.array.insert(0, "mangohud")
 
-                cmd = generator.generate(system, rom, player_controllers, md, guns, wheels, gameResolution)
-
-                if system.config.get_bool('hud_support'):
-                    hud_bezel = getHudBezel(system, generator, rom, gameResolution, system.guns_borders_size_name(guns), system.guns_border_ratio_type(guns))
-                    if ((hud := system.config.get('hud')) and hud != "none") or hud_bezel is not None:
-                        cmd.env["MANGOHUD_DLSYM"] = "1"
-                        hudconfig = getHudConfig(system, args.systemname, system.config.emulator, effectiveCore, rom, hud_bezel)
-                        hud_config_file = Path('/var/run/hud.config')
-                        with hud_config_file.open('w') as f:
-                            f.write(hudconfig)
-                        cmd.env["MANGOHUD_CONFIGFILE"] = hud_config_file
-                        if not generator.hasInternalMangoHUDCall():
-                            cmd.array.insert(0, "mangohud")
-
-                # generate the gun help
-                try:
-                    default_gun_help_dir = Path("/var/run/batocera-overlays")
-                    bezelsUtil.generate_gun_help(systemName, rom, system.config.use_guns, guns, default_gun_help_dir, "gun_help.png", gameResolution)
-                except:
-                    _logger.debug("Failed to generate the gun help image")
-
-                with profiler.pause():
+                    # generate the gun help
                     try:
-                        _logger.debug("Triggering mouse reset to primary display")
-                        subprocess.call(["/usr/bin/hotkeygen", "--reset-mouse"])
+                        default_gun_help_dir = Path("/var/run/batocera-overlays")
+                        bezelsUtil.generate_gun_help(systemName, rom, system.config.use_guns, guns, default_gun_help_dir, "gun_help.png", gameResolution)
                     except Exception as e:
-                        _logger.warning(f"Failed to reset mouse: {e}")
-                    monitor_thread.start()
-                    exitCode = runCommand(cmd)
+                        _logger.error("Failed to generate the gun help image")
+                        _logger.error(e)
 
-            # run a script after emulator shuts down
-            callExternalScripts(USER_SCRIPTS, "gameStop", [systemName, system.config.emulator, effectiveCore, rom])
-            callExternalScripts(SYSTEM_SCRIPTS, "gameStop", [systemName, system.config.emulator, effectiveCore, rom])
+                    # gun borders
+                    try:
+                        if system.config.use_guns and guns:
+                            if generator.supportsInternalBezels() or system.config.get_bool('hud_support'):
+                                _logger.debug("skipping configgen internal gun borders for emulator %s", system.config.emulator)
+                            else:
+                                gun_border_size_name = system.guns_borders_size_name(guns)
+                                if gun_border_size_name is not None:
+                                    _logger.debug("using configgen internal gun borders for emulator %s", system.config.emulator)
+                                    from .utils.gun_borders import draw_gun_borders
+                                    draw_gun_borders(
+                                        gun_border_size_name,
+                                        bezelsUtil.gunsBordersColorFomConfig(system.config),
+                                        system.guns_border_ratio_type(guns)
+                                    )
+                    except Exception as e:
+                        _logger.error("Failed to draw_gun_borders for gun_borders")
+                        _logger.error(e)
 
-        finally:
-            # always restore the resolution
-            if resolutionChanged:
-                try:
-                    videoMode.changeMode(systemMode)
-                except Exception:
-                    pass  # don't fail
+                    with profiler.pause():
+                        try:
+                            _logger.debug("Triggering mouse reset to primary display")
+                            subprocess.call(["/usr/bin/hotkeygen", "--reset-mouse"])
+                        except Exception as e:
+                            _logger.warning("Failed to reset mouse: %s", e)
+                        monitor_thread.start()
+                        exitCode = runCommand(cmd)
 
-            if mouseChanged:
-                try:
-                    videoMode.changeMouse(False)
-                except Exception:
-                    pass  # don't fail
+                # run a script after emulator shuts down
+                callExternalScripts(USER_SCRIPTS, "gameStop", [systemName, system.config.emulator, effectiveCore, rom])
+                callExternalScripts(SYSTEM_SCRIPTS, "gameStop", [systemName, system.config.emulator, effectiveCore, rom])
+
+            finally:
+                # always restore the resolution
+                if resolutionChanged:
+                    try:
+                        videoMode.changeMode(systemMode)
+                    except Exception:
+                        pass  # don't fail
+
+                if mouseChanged:
+                    try:
+                        videoMode.changeMouse(False)
+                    except Exception:
+                        pass  # don't fail
 
     # exit
     return exitCode
@@ -435,11 +462,11 @@ def _reconfigure_evmapy_on_the_fly():
             return
 
         _logger.info(">>> --- STARTING EVMAPY RECONFIGURATION ---")
-        
+
         valid_controllers = [c for c in _active_player_controllers if c is not None]
-        _logger.info(f">>> Found {len(valid_controllers)} valid controllers to configure.")
+        _logger.info(">>> Found %s valid controllers to configure.", len(valid_controllers))
         for c in valid_controllers:
-            _logger.info(f">>>   - Configuring P{c.player_number} with Path: {c.device_path}")
+            _logger.info(">>>   - Configuring P%s with Path: %s", c.player_number, c.device_path)
 
         new_evmapy_instance = evmapy(
             system=_evmapy_instance.system,
@@ -449,14 +476,14 @@ def _reconfigure_evmapy_on_the_fly():
             controllers=deepcopy(valid_controllers),
             guns=_evmapy_instance.guns
         )
-        
+
         _evmapy_instance = new_evmapy_instance
-        
+
         subprocess.call(['batocera-evmapy', 'stop'])
         time.sleep(0.5)
-        _evmapy_instance._evmapy__prepare()
+        cast('Any', _evmapy_instance)._evmapy__prepare()
         subprocess.call(['batocera-evmapy', 'start'])
-        
+
         _logger.info(">>> --- EVMAPY RECONFIGURATION COMPLETE ---")
 
 
@@ -465,13 +492,13 @@ def _controller_monitor_thread():
     # Uses pysdl2 to reliably get controller GUIDs and paths, then intelligently "revives"
     # the original controller object to preserve player order without disrupting the emulator.
     global _active_player_controllers
-    
+
     initial_controllers_snapshot = []
     with _player_controllers_lock:
         initial_controllers_snapshot = deepcopy(_active_player_controllers)
         for i, p_controller in enumerate(initial_controllers_snapshot):
             if p_controller and p_controller.guid:
-                _logger.info(f">>>   [P{i+1}] Stored GUID: {p_controller.guid}, Initial Path: {p_controller.device_path}")
+                _logger.info(">>>   [P%s] Stored GUID: %s, Initial Path: %s", i+1, p_controller.guid, p_controller.device_path)
 
     we_initialized_sdl = False
     try:
@@ -482,7 +509,7 @@ def _controller_monitor_thread():
         else:
             _logger.info(">>> SDL2 joystick subsystem already initialized by host (emulator). Will not re-initialize.")
     except Exception as e:
-        _logger.error(f"FATAL: Could not initialize pysdl2 for controller monitoring: {e}")
+        _logger.error("FATAL: Could not initialize pysdl2 for controller monitoring: %s", e)
         return
 
     context = pyudev.Context()
@@ -491,12 +518,12 @@ def _controller_monitor_thread():
 
     _logger.info(">>> Starting background controller monitor.")
     for device in iter(monitor.poll, None):
-        if device.get('ID_INPUT_JOYSTICK') != '1':
+        if device.properties.get('ID_INPUT_JOYSTICK') != '1':
             continue
 
-        _logger.info(f"--- Joystick Event Detected: {device.action} on {device.sys_path} ---")
+        _logger.info("--- Joystick Event Detected: %s on %s ---", device.action, device.sys_path)
         reconfigure_needed = False
-        
+
         sdl2.SDL_JoystickUpdate()
         online_controllers_map = {}
         for i in range(sdl2.SDL_NumJoysticks()):
@@ -505,40 +532,40 @@ def _controller_monitor_thread():
                 guid_str_buffer = (ctypes.c_char * 33)()
                 sdl2.SDL_JoystickGetGUIDString(guid_struct, guid_str_buffer, 33)
                 guid = guid_str_buffer.value.decode('utf-8')
-                
+
                 path_bytes = sdl2.SDL_JoystickPathForIndex(i)
                 path = path_bytes.decode('utf-8') if path_bytes else None
-                
+
                 if guid and path:
                     online_controllers_map[guid] = path
             except Exception as e:
-                _logger.warning(f"Error while querying joystick index {i} with pysdl2: {e}")
-        
-        _logger.info(f">>> [Check 1] Pysdl2 scan found online controllers: {online_controllers_map}")
-        
+                _logger.warning("Error while querying joystick index %s with pysdl2: %s", i, e)
+
+        _logger.info(">>> [Check 1] Pysdl2 scan found online controllers: %s", online_controllers_map)
+
         with _player_controllers_lock:
-            new_active_controllers = [None] * len(initial_controllers_snapshot)
-            
+            new_active_controllers: list[Controller | None] = [None] * len(initial_controllers_snapshot)
+
             for i, initial_controller in enumerate(initial_controllers_snapshot):
                 if initial_controller and initial_controller.guid in online_controllers_map:
                     new_path = online_controllers_map[initial_controller.guid]
                     if initial_controller.device_path != new_path:
-                        _logger.info(f">>> [Revival] Player {initial_controller.player_number} (GUID: {initial_controller.guid}) path has changed.")
+                        _logger.info(">>> [Revival] Player %s (GUID: %s) path has changed.", initial_controller.player_number, initial_controller.guid)
                         initial_controller.device_path = new_path
                     new_active_controllers[i] = initial_controller
 
             current_paths = [c.device_path if c else None for c in _active_player_controllers]
             new_paths = [c.device_path if c else None for c in new_active_controllers]
-            
+
             if current_paths != new_paths:
-                _logger.info(f">>> [Check 2] Controller state changed. Old Paths: {current_paths}. New Paths: {new_paths}")
+                _logger.info(">>> [Check 2] Controller state changed. Old Paths: %s. New Paths: %s", current_paths, new_paths)
                 _active_player_controllers = new_active_controllers
                 reconfigure_needed = True
             else:
                 _logger.info(">>> [Check 2] No change in assigned controller paths detected.")
 
         if reconfigure_needed:
-            time.sleep(1) 
+            time.sleep(1)
             _reconfigure_evmapy_on_the_fly()
 
     if we_initialized_sdl:
