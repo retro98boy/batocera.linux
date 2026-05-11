@@ -21,22 +21,22 @@ BR2_KERNEL_HEADERS_5_15=y
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_GIT=y
-# Branch: khadas-vims-5.15.y, Commit date: Aug 20, 2025 (please update when updating commit ref)
-BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/khadas/linux.git"
-BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION="4e557e233b9da219f48b82bfa313f353386097ec"
+# Branch: khadas-vims-5.15.y, Commit date: Dec 6, 2025 (please update when updating commit ref)
+BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/retro98boy/khadas-linux.git"
+BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION="27e102c5b9d981b2d42198e5599617ca5d820dd3"
 BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/a3gen2/linux_patches"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/a3gen2/linux-amlogic-5.15.y.config"
 BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/amlogic/a3gen2/linux-defconfig-fragment.config"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
-# Branch: khadas-vims-5.15.y, Commit date: Mar 16, 2026 (please update when updating commit ref)
+# Branch: khadas-vims-5.15.y, Commit date: Apr 25, 2026 (please update when updating commit ref)
 BR2_PACKAGE_AMLOGIC_COMMON_DRIVERS=y
-BR2_PACKAGE_AMLOGIC_COMMON_DRIVERS_REPOSITORY="https://github.com/khadas/common_drivers.git"
-BR2_PACKAGE_AMLOGIC_COMMON_DRIVERS_VERSION="2eef6f0d16b77777dc33634b5a99dab181fb7152"
+BR2_PACKAGE_AMLOGIC_COMMON_DRIVERS_REPOSITORY="https://github.com/retro98boy/khadas-common-drivers.git"
+BR2_PACKAGE_AMLOGIC_COMMON_DRIVERS_VERSION="1c536b5caa470e561b604a98b8c97a161fa25333"
 
 # Build the DTB from the kernel sources
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
-BR2_LINUX_KERNEL_INTREE_DTS_NAME="kvim4 kvim4n"
+BR2_LINUX_KERNEL_INTREE_DTS_NAME="kvim4 kvim4n t7-a311d2-65t33z-4g"
 
 # System
 BR2_PACKAGE_BATOCERA_KODI21=y
@@ -56,6 +56,7 @@ BR2_PACKAGE_FIRMWARE_KHADAS_VIM4=y
 
 # Bootloader
 BR2_PACKAGE_UBOOT_VIM4=y
+BR2_PACKAGE_UBOOT_AOC_65T33Z=y
 
 # choices can be put in _defconfig files only
 BR2_PACKAGE_BATOCERA_SPLASH_MPV=y

@@ -1,0 +1,4 @@
+config BR2_PACKAGE_UBOOT_AOC_65T33Z
+    bool "uboot files for AOC 65T33Z"
+    help
+        uboot files for AOC 65T33Z

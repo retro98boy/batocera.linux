@@ -16,6 +16,8 @@
 
 - SMART AM40
 
+- AOC 65T33Z T7 4G Version
+
 # Batocera是什么
 
 Batocera是一个基于Linux的开源模拟器游戏系统，rootfs采用Buildroot构建。集成了RetroArch和一些独立模拟器如PPSSPP，并且带有EmulationStation模拟器前端，使打开游戏从执行命令变成操作手柄/键盘。同时Batocera还附带Kodi媒体播放器
