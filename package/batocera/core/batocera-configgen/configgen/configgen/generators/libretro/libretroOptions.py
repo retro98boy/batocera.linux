@@ -1271,9 +1271,6 @@ def _mgba_options(
     _set_from_system_bool(coreSettings, 'mgba_force_gbp', system, 'rumble_gain', default=True, values=('OFF', 'ON'))
 
     if system.name != 'gba':
-        # GB / GBC: Use Super Game Boy borders
-        _set_from_system_bool(coreSettings, 'mgba_sgb_borders', system, 'sgb_borders', values=('ON', 'OFF'))
-
         # GB / GBC: Color Correction
         color_correction = system.config.get('color_correction', 'False')
         _set(coreSettings, 'mgba_color_correction', 'OFF' if color_correction == 'False' else color_correction)
@@ -1307,25 +1304,11 @@ def _vba_m_options(
         # GB: Colorisation of GB games
         _set_from_system(coreSettings, 'vbam_palettes', system, 'palettes', default='black and white')
 
-        # GB: Use Super Game Boy borders
-        _set_from_system(coreSettings, 'vbam_showborders', system, 'showborders_gb', default='disabled')
-
-        if system.config.get_bool('showborders_gb'):
-            # Force SGB mode, "sgb2" is same
-            _set(coreSettings, 'vbam_gbHardware', 'sgb')
-
         # GB: Color Correction
         _set_from_system(coreSettings, 'vbam_gbcoloroption', system, 'gbcoloroption_gb', default='disabled')
 
     if system.name == 'gbc':
-        # GBC: Use Super Game Boy borders
-        _set_from_system(coreSettings, 'vbam_showborders', system, 'showborders_gbc', default='disabled')
-
-        if system.config.get_bool('showborders_gbc'):
-            # Force SGB mode, "sgb2" is same
-            _set(coreSettings, 'vbam_gbHardware', 'sgb')
-
-        # GB: Color Correction
+        # GBC: Color Correction
         _set_from_system(coreSettings, 'vbam_gbcoloroption', system, 'gbcoloroption_gbc', default='disabled')
 
     if system.name == 'gba':
@@ -1535,6 +1518,20 @@ def _bsnes_options(
     # Video Filters
     _set_from_system(coreSettings, 'bsnes_video_filter', system, 'bsnes_video_filter', default='disabled')
 
+    # HD Mode 7 (bsnes_hd only, SNES systems)
+    if system.config.core == 'bsnes_hd' and system.name in ('snes', 'snes-msu1'):
+        _set_from_system(coreSettings, 'bsnes_mode7_scale',       system, 'bsnes_mode7_scale',       default='disable')
+        _set_from_system(coreSettings, 'bsnes_mode7_supersample', system, 'bsnes_mode7_supersample', default='none')
+        _set_from_system(coreSettings, 'bsnes_mode7_wsMode',         system, 'bsnes_mode7_wsMode',         default='Off')
+
+    # SGB options
+    if system.name == 'sgb-msu1':
+        # BIOS
+        _set_from_system(coreSettings, 'bsnes_sgb_bios', system, 'bsnes_sgb_bios', default='SGB1.sfc')
+        # Hide SGB border (bsnes only, not supported by bsnes_hd)
+        if system.config.core == 'bsnes':
+            _set_from_system(coreSettings, 'bsnes_hide_sgb_border', system, 'bsnes_hide_sgb_border', default='OFF')
+
 
 # Nintendo SNES/GB/GBC/SGB
 def _mesen_s_options(
@@ -1553,8 +1550,9 @@ def _mesen_s_options(
             gbmodel = 'Auto'
     _set(coreSettings, 'mesen-s_gbmodel', gbmodel)
 
-    # SGB2 Enable
-    _set_from_system(coreSettings, 'mesen-s_sgb2', system, 'mesen-s_sgb2', default='enabled')
+    # SGB2 Enable (sgb only)
+    if system.name == 'sgb':
+        _set_from_system(coreSettings, 'mesen-s_sgb2', system, 'mesen-s_sgb2', default='enabled')
 
     # NTSC Filter
     _set_from_system(coreSettings, 'mesen-s_ntsc_filter', system, 'mesen-s_ntsc_filter', default='disabled')
@@ -2429,7 +2427,6 @@ _option_functions: dict[str, Callable[[UnixSettings, Emulator, Path, Guns, Devic
     'vice_xvic': _vice_xvic_options,
     'vice_xpet': _vice_xpet_options,
     'puae': _puae_options,
-    'puae2021': _puae_options,
     'dolphin': _dolphin_options,
     'o2em': _o2em_options,
     'mame': _mame_options,
@@ -2463,6 +2460,7 @@ _option_functions: dict[str, Callable[[UnixSettings, Emulator, Path, Guns, Devic
     'snes9x': _snes9x_options,
     'snes9x_next': _snes9x_next_options,
     'bsnes': _bsnes_options,
+    'bsnes_hd': _bsnes_options,
     'mesen-s': _mesen_s_options,
     'vb': _vb_options,
     'opera': _opera_options,
