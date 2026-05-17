@@ -4,12 +4,13 @@
 #
 ################################################################################
 
-PPSSPP_VERSION = v1.19.3
+PPSSPP_VERSION = v1.20.4
 PPSSPP_SITE = https://github.com/hrydgard/ppsspp.git
 PPSSPP_SITE_METHOD=git
 PPSSPP_GIT_SUBMODULES=YES
 PPSSPP_LICENSE = GPLv2
 PPSSPP_DEPENDENCIES = sdl2 sdl2_ttf libzip
+PPSSPP_SUPPORTS_IN_SOURCE_BUILD = NO
 
 $(eval $(call register,ppsspp.emulator.yml))
 $(eval $(call register-if-kconfig,BR2_PACKAGE_BATOCERA_VULKAN,gfxbackend.ppsspp.emulator.yml))
@@ -113,14 +114,14 @@ endef
 
 define PPSSPP_INSTALL_TARGET_CMDS
     mkdir -p $(TARGET_DIR)/usr/bin
-    $(INSTALL) -D -m 0755 $(@D)/$(PPSSPP_TARGET_BINARY) \
+    $(INSTALL) -D -m 0755 $(@D)/buildroot-build/$(PPSSPP_TARGET_BINARY) \
         $(TARGET_DIR)/usr/bin/PPSSPP
     mkdir -p $(TARGET_DIR)/usr/share/ppsspp
     cp -R $(@D)/assets $(TARGET_DIR)/usr/share/ppsspp/PPSSPP
     # Fix PSP font rendering for CJK languages
     # (font from http://wenq.org/wqy2/index.cgi?Download#MicroHei_Beta)
     cp -f $(BR2_EXTERNAL_BATOCERA_PATH)/package/batocera/emulators/ppsspp/wqy-microhei.ttc \
-        $(TARGET_DIR)/usr/share/ppsspp/PPSSPP/Roboto-Condensed.ttf
+        $(TARGET_DIR)/usr/share/ppsspp/PPSSPP/Roboto_Condensed-Regular.ttf
 endef
 
 PPSSPP_PRE_CONFIGURE_HOOKS += PPSSPP_UPDATE_INCLUDES
