@@ -2,9 +2,10 @@
 ### Special Notes
 
 ### Hardware
+- Mangmi Air X initial support
 
 ### Added
-
+- NanoBoyAdvance as an alternative GBA emulator
 ### Fixed
 
 ### Changed / Improved
@@ -39,6 +40,8 @@
 - FAudio to 26.05
 - LabWC to 0.9.7
 - Mesa3D to 26.1.0
+- Nvidia Open Production driver to 595.71.05
+- Nvidia 580 Legacy driver to 580.159.03
 
 # 2026/05/08 - batocera.linux 43 - Glasswing
 ### Special Notes
