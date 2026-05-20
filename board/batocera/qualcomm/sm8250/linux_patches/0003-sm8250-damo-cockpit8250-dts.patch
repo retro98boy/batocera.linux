@@ -12,10 +12,10 @@ index 296688f7c..f4d7f7ade 100644
  dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-samsung-r8q.dtb
 diff --git a/arch/arm64/boot/dts/qcom/sm8250-damo-cockpit8250.dts b/arch/arm64/boot/dts/qcom/sm8250-damo-cockpit8250.dts
 new file mode 100644
-index 000000000..e53660edb
+index 000000000..3a410bf61
 --- /dev/null
 +++ b/arch/arm64/boot/dts/qcom/sm8250-damo-cockpit8250.dts
-@@ -0,0 +1,1340 @@
+@@ -0,0 +1,1344 @@
 +// SPDX-License-Identifier: BSD-3-Clause
 +/*
 + * Copyright (c) 2020, Linaro Ltd.
@@ -63,8 +63,8 @@ index 000000000..e53660edb
 +		#size-cells = <0>;
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&gpio_i2c0_pins>;
-+		scl-gpios = <&tlmm 104 0>;
-+		sda-gpios = <&tlmm 103 0>;
++		scl-gpios = <&tlmm 104 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		sda-gpios = <&tlmm 103 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 +	};
 +
 +	/* MAX9296 U49 */
@@ -74,8 +74,8 @@ index 000000000..e53660edb
 +		#size-cells = <0>;
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&gpio_i2c1_pins>;
-+		scl-gpios = <&tlmm 106 0>;
-+		sda-gpios = <&tlmm 105 0>;
++		scl-gpios = <&tlmm 106 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		sda-gpios = <&tlmm 105 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 +	};
 +
 +	/* MAX9296 U56 */
@@ -85,8 +85,8 @@ index 000000000..e53660edb
 +		#size-cells = <0>;
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&gpio_i2c2_pins>;
-+		scl-gpios = <&tlmm 108 0>;
-+		sda-gpios = <&tlmm 107 0>;
++		scl-gpios = <&tlmm 108 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		sda-gpios = <&tlmm 107 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
 +	};
 +
 +	rgb-leds {
@@ -766,7 +766,7 @@ index 000000000..e53660edb
 +};
 +
 +&mdss_dp_out {
-+	data-lanes = <2 3>;
++	data-lanes = <0 1>;
 +	remote-endpoint = <&usb_1_qmpphy_dp_in>;
 +};
 +
@@ -1274,6 +1274,10 @@ index 000000000..e53660edb
 +
 +	vdda-phy-supply = <&vreg_l9a_1p2>;
 +	vdda-pll-supply = <&vreg_l18a_0p92>;
++};
++
++&vamacro {
++	status = "disabled";
 +};
 +
 +&venus {
