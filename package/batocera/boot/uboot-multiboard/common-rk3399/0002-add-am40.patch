@@ -4,7 +4,7 @@ index 263df279..2d33fde9 100644
 +++ b/arch/arm/dts/Makefile
 @@ -135,6 +135,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3368) += \
  	rk3368-px5-evb.dtb \
-
+ 
  dtb-$(CONFIG_ROCKCHIP_RK3399) += \
 +	rk3399-am40.dtb \
  	rk3399-evb.dtb \
@@ -35,10 +35,10 @@ index 00000000..c58ad95d
 +};
 diff --git a/arch/arm/dts/rk3399-am40.dts b/arch/arm/dts/rk3399-am40.dts
 new file mode 100644
-index 00000000..76c8658f
+index 00000000..41e17a7c
 --- /dev/null
 +++ b/arch/arm/dts/rk3399-am40.dts
-@@ -0,0 +1,792 @@
+@@ -0,0 +1,794 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
@@ -63,9 +63,9 @@ index 00000000..76c8658f
 +		rtc0 = &pt7c4563;
 +		/*
 +		 * The rk808 circuit design on this board does not have the ability to maintain real-time time after a power outage.
-+		 * Registering rk808 as rtc99 (most kernel configurations read time from rtc0) can prevent the kernel from reading the time (2013) from rk808 during startup.
++		 * Registering rk808 as rtc1 (most kernel configurations read time from rtc0) can prevent the kernel from reading the time (2013) from rk808 during startup.
 +		 */
-+		rtc99 = &rk808;
++		rtc1 = &rk808;
 +	};
 +
 +	chosen {
@@ -225,7 +225,7 @@ index 00000000..76c8658f
 +		compatible = "linux,extcon-usbc-virtual-pd";
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&dp_hpd>;
-+		det-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
++		det-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
 +		vpd-data-role = "display-port";
 +		vpd-super-speed;
 +	};
@@ -294,7 +294,7 @@ index 00000000..76c8658f
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		rtl8211f: rtl8211f@0 {
++		rtl8211f: ethernet-phy@0 {
 +			reg = <0>;
 +			reset-assert-us = <10000>;
 +			reset-deassert-us = <30000>;
@@ -544,6 +544,8 @@ index 00000000..76c8658f
 +};
 +
 +&i2c3 {
++	i2c-scl-falling-time-ns = <15>;
++	i2c-scl-rising-time-ns = <450>;
 +	status = "okay";
 +};
 +
@@ -579,7 +581,7 @@ index 00000000..76c8658f
 +
 +&pcie0 {
 +	ep-gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
-+	num-lanes = <4>;
++	num-lanes = <2>;
 +	pinctrl-0 = <&pcie_clkreqn>;
 +	pinctrl-names = "default";
 +	vpcie3v3-supply = <&vcc3v3_pcie>;
@@ -599,7 +601,7 @@ index 00000000..76c8658f
 +
 +	display {
 +		dp_hpd: dp-hpd {
-+			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +
 +		front_hdmi_5v_en: front-hdmi-5v-en {
