@@ -171,7 +171,7 @@
 	/* Similar to CAINIAO CNIoT-CORE */
 	sound {
 		compatible = "amlogic,axg-sound-card";
-		model = "cainiao-cniot-core";
+		model = "cniot-core";
 		audio-widgets = "Speaker", "Internal Speaker";
 		audio-aux-devs = <&tdmout_a>, <&tdmout_b>, <&ad51050>;
 		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
