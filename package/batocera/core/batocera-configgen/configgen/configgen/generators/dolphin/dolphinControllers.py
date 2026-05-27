@@ -272,7 +272,7 @@ def generateControllerConfig_triforce(system: Emulator, playersControllers: Cont
         'joystick2left': 'C-Stick/Left',
         'hotkey':        None
     }
-    
+
     triforceReverseAxes: dict[str | None, str] = {
         'Main Stick/Up':   'Main Stick/Down',
         'Main Stick/Left': 'Main Stick/Right',
@@ -503,6 +503,13 @@ def get_AltMapping(system: Emulator, nplayer: int, anyMapping: Mapping[str, str 
         mapping['b'] = 'Buttons/A'
         mapping['y'] = 'Buttons/B'
         mapping['x'] = 'Buttons/Y'
+
+    # BattlerGC Pro is a "real" GC style controller, plus full analog+digital analogs(x-input only, home+B turns on/off, digital triggers are mirrored l3/r3).
+    if system.config.get(f"dolphin_port_{nplayer}_type") == '6c':
+        mapping['a'] = 'Buttons/B'
+        mapping['b'] = 'Buttons/A'
+        mapping['l3'] = 'Triggers/L'
+        mapping['r3'] = 'Triggers/R'
 
     return mapping
 

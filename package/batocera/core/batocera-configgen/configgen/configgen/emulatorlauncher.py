@@ -36,8 +36,8 @@ from .utils import bezels as bezelsUtil, metadata, videoMode, wheelsUtils
 from .utils.evmapy import evmapy
 from .utils.hotkeygen import set_hotkeygen_context
 from .utils.logger import setup_logging
-from .utils.squashfs import mount_squashfs
 from .utils.overlayfs import mount_overlayfs
+from .utils.squashfs import mount_squashfs
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -586,7 +586,7 @@ def runCommand(command: Command) -> int:
     if not command.array:
         raise BadCommandLineArguments
 
-    proc = subprocess.Popen(command.array, env=command.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen(["nice", "-n", "-4", *command.array], env=command.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     exitcode = 0
 
     try:
