@@ -612,7 +612,7 @@ config BR2_TARGET_BATOCERA_IMAGES_DEFINITIONS
 	default "qualcomm/sdm845/odin"									if BR2_PACKAGE_BATOCERA_TARGET_SDM845
 	default "qualcomm/qcs6490/dragonq6a"    							if BR2_PACKAGE_BATOCERA_TARGET_QCS6490
 	default "qualcomm/sm6115/mangmi-air-x-mq65 qualcomm/sm6115/mangmi-air-x-mq66"    if BR2_PACKAGE_BATOCERA_TARGET_SM6115
-	default "qualcomm/sm8250"    if BR2_PACKAGE_BATOCERA_TARGET_SM8250
+	default "qualcomm/sm8250 qualcomm/sm8250/cockpit8250"    if BR2_PACKAGE_BATOCERA_TARGET_SM8250
 	default "qualcomm/sm8550"    if BR2_PACKAGE_BATOCERA_TARGET_SM8550
 	default "starfive/jh7110"   							if BR2_PACKAGE_BATOCERA_TARGET_JH7110
 	default "amlogic/s922x/ogu amlogic/s922x/gtkingpro amlogic/s922x/gtking amlogic/s922x/odroidn2l amlogic/s922x/vim3 amlogic/s922x/cniot-core amlogic/s922x/lemo-xiaoc amlogic/s922x/xiaoyi-pro amlogic/s922x/odroidn2 amlogic/s922x/odroidn2plus amlogic/s922x/zero2" \
