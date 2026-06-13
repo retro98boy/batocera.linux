@@ -12,6 +12,8 @@
 
 - DAMO Cockpit8250
 
+- Elo Backpack5 RK3588S
+
 - TIANNUO TN3399_V3
 
 - SMART AM40
