@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-RPCS3_VERSION = v0.0.40
+RPCS3_VERSION = v0.0.41
 RPCS3_SITE = https://github.com/RPCS3/rpcs3.git
 RPCS3_SITE_METHOD=git
 RPCS3_GIT_SUBMODULES=YES
@@ -43,7 +43,7 @@ RPCS3_CONF_OPTS += -DLLVM_DIR=$(STAGING_DIR)/usr/lib/cmake/llvm/
 RPCS3_CONF_OPTS += -DSTATIC_LINK_LLVM=ON
 RPCS3_CONF_OPTS += -DUSE_LTO=OFF
 
-ifeq ($(BR2_PACKAGE_VULKAN_HEADERS)$(BR2_PACKAGE_VULKAN_LOADER),yy)
+ifeq ($(BR2_PACKAGE_BATOCERA_VULKAN),y)
     RPCS3_DEPENDENCIES += vulkan-headers vulkan-loader
     RPCS3_CONF_OPTS += -DUSE_VULKAN=ON
 else
