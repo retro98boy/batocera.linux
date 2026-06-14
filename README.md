@@ -1,6 +1,6 @@
 # 仓库作用
 
-为自己持有的板子移植Batocera，目前支持的设备：
+为自己持有的设备移植Batocera，目前支持的设备：
 
 - BesTV R3300-L
 
@@ -17,6 +17,8 @@
 - TIANNUO TN3399_V3
 
 - SMART AM40
+
+- Xerox ET1020
 
 - AOC 65T33Z T7 4G Version
 
@@ -64,7 +66,13 @@ make rk3399-build
 
 移植的设备不在官方的设备支持列表内，系统自带的在线升级不可用，但是官方为39及以后的版本提供本地升级方法：
 
-将对应板子的boot.tar.xz文件上传到板子的/userdata/system/upgrade目录（不存在就自行创建），然后在板子的shell执行batocera-upgrade manual即可
+将对应设备的boot.tar.xz文件上传到设备的`/userdata/system/upgrade`目录（不存在就自行创建）
+
+39-43版本：执行`batocera-upgrade manual`开始升级
+
+43之后的版本：执行`batocera-upgrade --media-upgrade`开始升级
+
+升级完毕后重启设备即可
 
 # 源码对比
 
