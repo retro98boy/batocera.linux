@@ -1,0 +1,51 @@
+From fe9c3f68263d3afb829372d701359fcb8259a034 Mon Sep 17 00:00:00 2001
+From: retro98boy <retro98boy@qq.com>
+Date: Sun, 14 Jun 2026 14:11:21 +0800
+Subject: [PATCH 1/2] Setting up tiannuo,tn3399-v3 AP6255 firmware symlinks
+
+---
+ brcm/BCM4345C0.tiannuo,tn3399-v3.hcd               | 1 +
+ brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.bin      | 1 +
+ brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.clm_blob | 1 +
+ brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.txt      | 1 +
+ 4 files changed, 4 insertions(+)
+ create mode 120000 brcm/BCM4345C0.tiannuo,tn3399-v3.hcd
+ create mode 120000 brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.bin
+ create mode 120000 brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.clm_blob
+ create mode 120000 brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.txt
+
+diff --git a/brcm/BCM4345C0.tiannuo,tn3399-v3.hcd b/brcm/BCM4345C0.tiannuo,tn3399-v3.hcd
+new file mode 120000
+index 0000000..719f5f9
+--- /dev/null
++++ b/brcm/BCM4345C0.tiannuo,tn3399-v3.hcd
+@@ -0,0 +1 @@
++BCM4345C0_003.001.025.0162.0000_Generic_UART_37_4MHz_wlbga_ref_iLNA_iTR_eLG.hcd
+\ No newline at end of file
+diff --git a/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.bin b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.bin
+new file mode 120000
+index 0000000..e44aa55
+--- /dev/null
++++ b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.bin
+@@ -0,0 +1 @@
++brcmfmac43455-sdio.bin
+\ No newline at end of file
+diff --git a/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.clm_blob b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.clm_blob
+new file mode 120000
+index 0000000..ca32936
+--- /dev/null
++++ b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.clm_blob
+@@ -0,0 +1 @@
++brcmfmac43455-sdio.clm_blob
+\ No newline at end of file
+diff --git a/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.txt b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.txt
+new file mode 120000
+index 0000000..2aba486
+--- /dev/null
++++ b/brcm/brcmfmac43455-sdio.tiannuo,tn3399-v3.txt
+@@ -0,0 +1 @@
++brcmfmac43455-sdio.txt
+\ No newline at end of file
+-- 
+2.54.0
+
