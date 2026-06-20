@@ -37,6 +37,7 @@ PACKAGES=(
     "gosu"  # entry-point.sh
     "graphviz"
     "libcrypt-dev"
+    "libgnutls28-dev"
     "libncurses6"
     "libncurses-dev"
     "libssl-dev"  # cmake build
