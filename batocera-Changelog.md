@@ -15,6 +15,9 @@
 - ES Setting for toggle fast forward
 - Dolphin GameCube Controller type BattlerGC Pro (x-input mode with analog+digital triggers)
 - ES setting to determnine mitigations On|Off(Default On)
+- ES setting to choose controller LED mode (Rainbow, Pulse Chroma)
+- box64 userland x86_64 emulator for aarch64
+- Legion Go / Go 2 LED controller support
 ### Fixed
 
 ### Changed / Improved
@@ -27,6 +30,7 @@
 - Rockcip RK3588 devices moved to the mainline linux kernel:
   CoolPi 4B, FriendlyElec CM3588 NAS, GameForce ACE, IndieDroid Nova, Khadas Edge2, Orange Pi 5, Orange Pi 5 Plus, Orange Pi 5B, QuartzPro64, ROCK 5A, ROCK 5B, ROCK 5B Plus, ROCK 5C
 ### Updated
+- box64 0.4.2
 - CDogs to 2.4.0
 - CLK to 2026-04-30
 - ECWolf to Feb 23, 2026 build
@@ -63,6 +67,7 @@
 - Tsugaru to v20251206
 - Vita3k to 10th of June build
 - VKQuake to 1.34.1
+- Winetricks to 20260125
 ### System
 - Allwinner H700 device kernel updated to 7.0.11
 - ALSA UCM configuration to v1.2.16
@@ -73,8 +78,8 @@
 - LabWC to 0.20.0
 - Linux Firmware to 20260519
 - Mesa3D to 26.1.2
-- Nvidia Open Production driver to 595.71.05
-- Nvidia 580 Legacy driver to 580.159.03
+- Nvidia Open Production driver to 595.84
+- Nvidia 580 Legacy driver to 580.159.04
 - QT to 6.11.1
 - Qualcomm SM6115 device kernel updated to 7.0.11
 - Qualcomm SM8550 device kernel updated to 7.0.11
@@ -88,7 +93,7 @@
 - WINE Proton to proton-exp-11.0
 - WINE TKG to 11.10
 - Wlroots to 0.20.1
-- X86_64 / Zen3 kernel updated to 7.0.11
+- X86_64 / Zen3 kernel updated to 7.1.1
 
 # 2026/05/30 - batocera.linux 43.1
 ### Fixed

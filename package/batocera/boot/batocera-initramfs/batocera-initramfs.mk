@@ -82,12 +82,20 @@ BATOCERA_INITRAMFS_PRE_INSTALL_TARGET_HOOKS += BATOCERA_INITRAMFS_SDM845_EARLY_F
 endif
 
 ifeq ($(BR2_PACKAGE_BATOCERA_TARGET_SM8250),y)
+BATOCERA_INITRAMFS_DEPENDENCIES += alllinuxfirmwares
 define BATOCERA_INITRAMFS_SM8250_EARLY_FIRMWARE
-    mkdir -p $(INITRAMFS_DIR)/lib/firmware/qcom/
-    cp -R $(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/qualcomm/sm8250/fsoverlay/lib/firmware/qcom/* \
-        $(INITRAMFS_DIR)/lib/firmware/qcom/
+	mkdir -p $(INITRAMFS_DIR)/lib/firmware/qcom/sm8250/
+	cp -R $(ALLLINUXFIRMWARES_DIR)/qcom/sm8250/* \
+		$(INITRAMFS_DIR)/lib/firmware/qcom/sm8250/
+	mv $(INITRAMFS_DIR)/lib/firmware/qcom/sm8250/Thundercomm/RB5/* \
+		$(INITRAMFS_DIR)/lib/firmware/qcom/sm8250/
+	rm -rf $(INITRAMFS_DIR)/lib/firmware/qcom/sm8250/Thundercomm
+	cp $(ALLLINUXFIRMWARES_DIR)/qcom/a650_sqe.fw \
+		$(INITRAMFS_DIR)/lib/firmware/qcom/
+	cp -R $(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/qualcomm/sm8250/fsoverlay/lib/firmware/qcom/* \
+		$(INITRAMFS_DIR)/lib/firmware/qcom/
 endef
-BATOCERA_INITRAMFS_PRE_INSTALL_TARGET_HOOKS += BATOCERA_INITRAMFS_SM8250_EARLY_FIRMWARE
+BATOCERA_INITRAMFS_PRE_INSTALL_IMAGES_HOOKS += BATOCERA_INITRAMFS_SM8250_EARLY_FIRMWARE
 endif
 
 ifeq ($(BR2_PACKAGE_BATOCERA_TARGET_SM8550),y)
