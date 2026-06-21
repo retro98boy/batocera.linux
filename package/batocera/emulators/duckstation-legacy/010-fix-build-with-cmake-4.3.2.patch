@@ -1,0 +1,16 @@
+diff -uprN duckstation-legacy-56ac3d6c324ec4520dac433b071ecab6227fb459-orig/dep/cpuinfo/deps/clog/CMakeLists.txt duckstation-legacy-56ac3d6c324ec4520dac433b071ecab6227fb459/dep/cpuinfo/deps/clog/CMakeLists.txt
+--- duckstation-legacy-56ac3d6c324ec4520dac433b071ecab6227fb459-orig/dep/cpuinfo/deps/clog/CMakeLists.txt	2023-08-04 19:39:52.000000000 +0800
++++ duckstation-legacy-56ac3d6c324ec4520dac433b071ecab6227fb459/dep/cpuinfo/deps/clog/CMakeLists.txt	2026-06-21 17:36:54.717874980 +0800
+@@ -1,4 +1,4 @@
+-CMAKE_MINIMUM_REQUIRED(VERSION 3.1 FATAL_ERROR)
++CMAKE_MINIMUM_REQUIRED(VERSION 3.16 FATAL_ERROR)
+ 
+ # ---[ Project and semantic versioning.
+ PROJECT(clog C CXX)
+@@ -39,4 +39,4 @@ ELSE()
+ ENDIF()
+ IF(ANDROID AND NOT CLOG_LOG_TO_STDIO)
+   TARGET_LINK_LIBRARIES(clog PRIVATE log)
+-ENDIF()
+\ No newline at end of file
++ENDIF()
