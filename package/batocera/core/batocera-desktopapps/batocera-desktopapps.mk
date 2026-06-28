@@ -106,7 +106,7 @@ ifeq ($(BR2_PACKAGE_RPCS3),y)
 endif
 
 # cemu
-ifeq ($(BR2_PACKAGE_CEMU)$(BR2_PACKAGE_CEMU_ANDROID),y)
+ifeq ($(BR2_PACKAGE_CEMU),y)
   BATOCERA_DESKTOPAPPS_SCRIPTS += batocera-config-cemu
   BATOCERA_DESKTOPAPPS_APPS    += cemu-config.desktop
   BATOCERA_DESKTOPAPPS_ICONS   += cemu.png
@@ -166,6 +166,13 @@ ifeq ($(BR2_PACKAGE_XENIA_CANARY),y)
   BATOCERA_DESKTOPAPPS_ICONS   += xenia-canary.png
 endif
 
+# xenia-edge
+ifeq ($(BR2_PACKAGE_XENIA_EDGE),y)
+  BATOCERA_DESKTOPAPPS_SCRIPTS += batocera-config-xenia-edge
+  BATOCERA_DESKTOPAPPS_APPS    += xenia-edge-config.desktop
+  BATOCERA_DESKTOPAPPS_ICONS   += xenia-edge.png
+endif
+
 # vita3k
 ifeq ($(BR2_PACKAGE_VITA3K),y)
   BATOCERA_DESKTOPAPPS_SCRIPTS += batocera-config-vita3k
@@ -180,12 +187,12 @@ ifeq ($(BR2_PACKAGE_PLAY),y)
   BATOCERA_DESKTOPAPPS_ICONS   += play.png
 endif
 
-# shadPS4 - disabled for now
-#ifeq ($(BR2_PACKAGE_SHADPS4),y)
-#  BATOCERA_DESKTOPAPPS_SCRIPTS += batocera-config-shadps4
-#  BATOCERA_DESKTOPAPPS_APPS    += shadps4-config.desktop
-#  BATOCERA_DESKTOPAPPS_ICONS   += shadps4.png
-#endif
+# shadPS4 - QT Launcher
+ifeq ($(BR2_PACKAGE_SHADPS4),y)
+  BATOCERA_DESKTOPAPPS_SCRIPTS += batocera-config-shadps4
+  BATOCERA_DESKTOPAPPS_APPS    += shadps4-config.desktop
+  BATOCERA_DESKTOPAPPS_ICONS   += shadps4.png
+endif
 
 # lindbergh loader
 ifeq ($(BR2_PACKAGE_LINDBERGH_LOADER),y)

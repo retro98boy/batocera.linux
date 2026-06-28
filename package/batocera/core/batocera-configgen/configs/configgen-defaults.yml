@@ -128,6 +128,8 @@ catacomb:
 cannonball:
   emulator: cannonball
   core:     cannonball
+  options:
+    bezel: none
 cave3rd:
   emulator: libretro
   core:     mame
@@ -837,10 +839,8 @@ xbox:
   emulator: xemu
   core:     xemu
 xbox360:
-  emulator: xenia-canary
-  core:     xenia-canary
-  options:
-    hud_support: false
+  emulator: xenia-edge
+  core:     xenia-edge
 chihiro:
   emulator: xemu
   core:     xemu
