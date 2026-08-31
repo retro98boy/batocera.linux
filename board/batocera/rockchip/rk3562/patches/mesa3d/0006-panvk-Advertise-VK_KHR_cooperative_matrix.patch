@@ -1,0 +1,170 @@
+From 75457adb41eb3ab2470adcf918b1b82a8674d185 Mon Sep 17 00:00:00 2001
+From: Christian Gmeiner <cgmeiner@igalia.com>
+Date: Wed, 1 Jul 2026 15:11:00 +0200
+Subject: [PATCH 6/7] panvk: Advertise VK_KHR_cooperative_matrix
+
+MMUL is only available on v11 and later, so expose the extension and
+the cooperativeMatrix feature there.
+
+Signed-off-by: Christian Gmeiner <cgmeiner@igalia.com>
+Reviewed-by: Lars-Ivar Hesselberg Simonsen <lars-ivar.simonsen@arm.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/42723>
+---
+ src/panfrost/vulkan/panvk_physical_device.c   | 107 ++++++++++++++++++
+ .../vulkan/panvk_vX_physical_device.c         |   8 ++
+ 2 files changed, 115 insertions(+)
+
+diff --git a/src/panfrost/vulkan/panvk_physical_device.c b/src/panfrost/vulkan/panvk_physical_device.c
+index 8021aa9..f33a4a3 100644
+--- a/src/panfrost/vulkan/panvk_physical_device.c
++++ b/src/panfrost/vulkan/panvk_physical_device.c
+@@ -592,6 +592,113 @@ panvk_GetPhysicalDeviceQueueFamilyProperties2(
+    }
+ }
+ 
++VKAPI_ATTR VkResult VKAPI_CALL
++panvk_GetPhysicalDeviceCooperativeMatrixPropertiesKHR(
++   VkPhysicalDevice physicalDevice, uint32_t *pPropertyCount,
++   VkCooperativeMatrixPropertiesKHR *pProperties)
++{
++   VK_FROM_HANDLE(panvk_physical_device, physical_device, physicalDevice);
++   VK_OUTARRAY_MAKE_TYPED(VkCooperativeMatrixPropertiesKHR, out, pProperties,
++                          pPropertyCount);
++
++   unsigned arch = pan_arch(physical_device->kmod.dev->props.gpu_id);
++
++   if (arch < 11)
++      return VK_SUCCESS;
++
++   vk_outarray_append_typed(VkCooperativeMatrixPropertiesKHR, &out, p) {
++      *p = (VkCooperativeMatrixPropertiesKHR){
++         .sType = VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR,
++         .MSize = 4,
++         .NSize = 4,
++         .KSize = 4,
++         .AType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .BType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .CType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .ResultType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .saturatingAccumulation = false,
++         .scope = VK_SCOPE_SUBGROUP_KHR,
++      };
++   }
++
++   vk_outarray_append_typed(VkCooperativeMatrixPropertiesKHR, &out, p) {
++      *p = (VkCooperativeMatrixPropertiesKHR){
++         .sType = VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR,
++         .MSize = 16,
++         .NSize = 16,
++         .KSize = 16,
++         .AType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .BType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .CType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .ResultType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .saturatingAccumulation = false,
++         .scope = VK_SCOPE_SUBGROUP_KHR,
++      };
++   }
++
++   vk_outarray_append_typed(VkCooperativeMatrixPropertiesKHR, &out, p) {
++      *p = (VkCooperativeMatrixPropertiesKHR){
++         .sType = VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR,
++         .MSize = 4,
++         .NSize = 8,
++         .KSize = 8,
++         .AType = VK_COMPONENT_TYPE_FLOAT16_KHR,
++         .BType = VK_COMPONENT_TYPE_FLOAT16_KHR,
++         .CType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .ResultType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .saturatingAccumulation = false,
++         .scope = VK_SCOPE_SUBGROUP_KHR,
++      };
++   }
++
++   vk_outarray_append_typed(VkCooperativeMatrixPropertiesKHR, &out, p) {
++      *p = (VkCooperativeMatrixPropertiesKHR){
++         .sType = VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR,
++         .MSize = 16,
++         .NSize = 32,
++         .KSize = 32,
++         .AType = VK_COMPONENT_TYPE_FLOAT16_KHR,
++         .BType = VK_COMPONENT_TYPE_FLOAT16_KHR,
++         .CType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .ResultType = VK_COMPONENT_TYPE_FLOAT32_KHR,
++         .saturatingAccumulation = false,
++         .scope = VK_SCOPE_SUBGROUP_KHR,
++      };
++   }
++
++   vk_outarray_append_typed(VkCooperativeMatrixPropertiesKHR, &out, p) {
++      *p = (VkCooperativeMatrixPropertiesKHR){
++         .sType = VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR,
++         .MSize = 4,
++         .NSize = 16,
++         .KSize = 16,
++         .AType = VK_COMPONENT_TYPE_SINT8_KHR,
++         .BType = VK_COMPONENT_TYPE_SINT8_KHR,
++         .CType = VK_COMPONENT_TYPE_SINT32_KHR,
++         .ResultType = VK_COMPONENT_TYPE_SINT32_KHR,
++         .saturatingAccumulation = false,
++         .scope = VK_SCOPE_SUBGROUP_KHR,
++      };
++   }
++
++   vk_outarray_append_typed(VkCooperativeMatrixPropertiesKHR, &out, p) {
++      *p = (VkCooperativeMatrixPropertiesKHR){
++         .sType = VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR,
++         .MSize = 4,
++         .NSize = 16,
++         .KSize = 16,
++         .AType = VK_COMPONENT_TYPE_UINT8_KHR,
++         .BType = VK_COMPONENT_TYPE_UINT8_KHR,
++         .CType = VK_COMPONENT_TYPE_UINT32_KHR,
++         .ResultType = VK_COMPONENT_TYPE_UINT32_KHR,
++         .saturatingAccumulation = false,
++         .scope = VK_SCOPE_SUBGROUP_KHR,
++      };
++   }
++
++   return vk_outarray_status(&out);
++}
++
+ VKAPI_ATTR void VKAPI_CALL
+ panvk_GetPhysicalDeviceMemoryProperties2(
+    VkPhysicalDevice physicalDevice,
+diff --git a/src/panfrost/vulkan/panvk_vX_physical_device.c b/src/panfrost/vulkan/panvk_vX_physical_device.c
+index 8db16e6..3357979 100644
+--- a/src/panfrost/vulkan/panvk_vX_physical_device.c
++++ b/src/panfrost/vulkan/panvk_vX_physical_device.c
+@@ -50,6 +50,7 @@ panvk_per_arch(get_physical_device_extensions)(
+       .KHR_calibrated_timestamps =
+          device->kmod.dev->props.gpu_can_query_timestamp,
+       .KHR_compute_shader_derivatives = PAN_ARCH >= 9,
++      .KHR_cooperative_matrix = PAN_ARCH >= 11,
+       .KHR_copy_commands2 = true,
+       .KHR_copy_memory_indirect = PAN_ARCH >= 10,
+       .KHR_create_renderpass2 = true,
+@@ -476,6 +477,10 @@ panvk_per_arch(get_physical_device_features)(
+       .computeDerivativeGroupQuads = PAN_ARCH >= 9,
+       .computeDerivativeGroupLinear = PAN_ARCH >= 9,
+ 
++      /* VK_KHR_cooperative_matrix */
++      .cooperativeMatrix = PAN_ARCH >= 11,
++      .cooperativeMatrixRobustBufferAccess = false,
++
+       /* VK_KHR_maintenance7 */
+       .maintenance7 = true,
+ 
+@@ -1215,6 +1220,9 @@ panvk_per_arch(get_physical_device_properties)(
+       /* VK_KHR_compute_shader_derivatives */
+       .meshAndTaskShaderDerivatives = false,
+ 
++      /* VK_KHR_cooperative_matrix */
++      .cooperativeMatrixSupportedStages = VK_SHADER_STAGE_COMPUTE_BIT,
++
+       /* VK_KHR_robustness2 */
+       .robustStorageBufferAccessSizeAlignment = 4,
+       .robustUniformBufferAccessSizeAlignment = 16,
+-- 
+2.55.0
+

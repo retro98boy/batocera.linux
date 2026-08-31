@@ -1,0 +1,172 @@
+From f023f4381ed1c11272eecb17d08cba3e2a904c89 Mon Sep 17 00:00:00 2001
+From: Ryan Mckeever <ryan.mckeever@collabora.com>
+Date: Tue, 2 Jun 2026 23:04:45 -0700
+Subject: [PATCH 1/7] panvk: enable Vulkan 1.1 and subgroups on Bifrost
+
+Reviewed-by: Lorenzo Rossi <lorenzo.rossi@collabora.com>
+Reviewed-by: Erik Faye-Lund <erik.faye-lund@collabora.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/41981>
+---
+ src/panfrost/ci/panfrost-g52-fails.txt        | 16 ---------
+ src/panfrost/ci/panfrost-g52-skips.txt        |  6 ----
+ .../vulkan/panvk_vX_physical_device.c         | 35 +++++++++----------
+ 3 files changed, 17 insertions(+), 40 deletions(-)
+
+diff --git a/src/panfrost/ci/panfrost-g52-fails.txt b/src/panfrost/ci/panfrost-g52-fails.txt
+index c6f74c2..1e7a72a 100644
+--- a/src/panfrost/ci/panfrost-g52-fails.txt
++++ b/src/panfrost/ci/panfrost-g52-fails.txt
+@@ -297,8 +297,6 @@ dEQP-VK.api.object_management.max_concurrent.device_group,Fail
+ # CTS bug: https://gerrit.khronos.org/c/vk-gl-cts/+/19823
+ dEQP-VK.api.device_init.create_device_global_priority.basic,Fail
+ dEQP-VK.api.device_init.create_device_global_priority_khr.basic,Fail
+-dEQP-VK.api.device_init.create_device_global_priority_query.basic,Fail
+-dEQP-VK.api.device_init.create_device_global_priority_query_khr.basic,Fail
+ 
+ # New failures with VKCTS 1.4.4.0
+ dEQP-VK.pipeline.fast_linked_library.vertex_input.misc.unbound_input,Crash
+@@ -327,22 +325,8 @@ dEQP-VK.pipeline.fast_linked_library.vertex_input.misc.unbound_input_dynamic_int
+ dEQP-VK.pipeline.fast_linked_library.vertex_input.misc.unbound_input_integer,Crash
+ dEQP-VK.pipeline.monolithic.vertex_input.misc.unbound_input_dynamic_integer,Crash
+ dEQP-VK.pipeline.monolithic.vertex_input.misc.unbound_input_integer,Crash
+-dEQP-VK.wsi.acquire_drm_display.acquire_drm_display_invalid_fd,Crash
+-dEQP-VK.wsi.acquire_drm_display.acquire_drm_display_not_master,Crash
+-dEQP-VK.wsi.acquire_drm_display.acquire_drm_display_unowned_connector_id,Crash
+-dEQP-VK.wsi.acquire_drm_display.acquire_drm_display,Crash
+-dEQP-VK.wsi.acquire_drm_display.get_drm_display_invalid_connector_id,Crash
+-dEQP-VK.wsi.acquire_drm_display.get_drm_display_invalid_fd,Crash
+-dEQP-VK.wsi.acquire_drm_display.get_drm_display_not_master,Crash
+-dEQP-VK.wsi.acquire_drm_display.get_drm_display_unowned_connector_id,Crash
+-dEQP-VK.wsi.acquire_drm_display.get_drm_display,Crash
+-dEQP-VK.wsi.acquire_drm_display.release_display,Crash
+ 
+ # VKCTS 1.4.5.3 -> 1.4.6.1 uprev
+-dEQP-VK.api.device_init.create_device_unsupported_features.protected_memory_features,Fail
+-dEQP-VK.info.device_extension_dependencies,Fail
+-dEQP-VK.pipeline.monolithic.push_descriptor.compute.incremental_updates,Crash
+-dEQP-VK.pipeline.monolithic.push_descriptor.compute.incremental_updates_template,Crash
+ dEQP-VK.rasterization.primitives.no_stipple.lines,Fail
+ dEQP-VK.rasterization.primitives.no_stipple.lines_factor_0,Fail
+ dEQP-VK.rasterization.primitives.no_stipple.lines_factor_large,Fail
+diff --git a/src/panfrost/ci/panfrost-g52-skips.txt b/src/panfrost/ci/panfrost-g52-skips.txt
+index 991de03..7994601 100644
+--- a/src/panfrost/ci/panfrost-g52-skips.txt
++++ b/src/panfrost/ci/panfrost-g52-skips.txt
+@@ -52,12 +52,6 @@ dEQP-VK.compute.pipeline.zero_initialize_workgroup_memory.max_workgroup_memory.6
+ dEQP-VK.compute.pipeline.zero_initialize_workgroup_memory.types.f32mat3x3
+ dEQP-VK.compute.pipeline.zero_initialize_workgroup_memory.types.f32mat4x4
+ 
+-# tests are broken with Vulkan 1.0: https://gerrit.khronos.org/c/vk-gl-cts/+/19823
+-dEQP-VK.wsi.direct_drm.*
+-
+-# more tests broken on Vulkan 1.0: https://gitlab.khronos.org/Tracker/vk-gl-cts/-/issues/6409
+-dEQP-VK.wsi.*.maintenance1.*.bind_image*
+-
+ # Almost all crashes
+ dEQP-VK.wsi.*present_timing.*
+ 
+diff --git a/src/panfrost/vulkan/panvk_vX_physical_device.c b/src/panfrost/vulkan/panvk_vX_physical_device.c
+index dd8b768..ddd8219 100644
+--- a/src/panfrost/vulkan/panvk_vX_physical_device.c
++++ b/src/panfrost/vulkan/panvk_vX_physical_device.c
+@@ -39,7 +39,6 @@ panvk_per_arch(get_physical_device_extensions)(
+    const struct panvk_instance *instance,
+    struct vk_device_extension_table *ext)
+ {
+-   bool has_vk1_1 = PAN_ARCH >= 10;
+    bool has_vk1_2 = PAN_ARCH >= 10;
+    bool has_gralloc = vk_android_get_ugralloc() != NULL;
+ 
+@@ -75,17 +74,17 @@ panvk_per_arch(get_physical_device_extensions)(
+       .KHR_image_format_list = true,
+       .KHR_imageless_framebuffer = true,
+       .KHR_index_type_uint8 = true,
+-      .KHR_internally_synchronized_queues = has_vk1_1,
++      .KHR_internally_synchronized_queues = true,
+       .KHR_line_rasterization = true,
+       .KHR_load_store_op_none = true,
+       .KHR_maintenance1 = true,
+       .KHR_maintenance2 = true,
+       .KHR_maintenance3 = true,
+-      .KHR_maintenance4 = has_vk1_1,
+-      .KHR_maintenance5 = has_vk1_1,
+-      .KHR_maintenance6 = has_vk1_1,
+-      .KHR_maintenance7 = has_vk1_1,
+-      .KHR_maintenance8 = has_vk1_1,
++      .KHR_maintenance4 = true,
++      .KHR_maintenance5 = true,
++      .KHR_maintenance6 = PAN_ARCH >= 10,
++      .KHR_maintenance7 = true,
++      .KHR_maintenance8 = true,
+       .KHR_maintenance9 = true,
+       .KHR_map_memory2 = true,
+       .KHR_multiview = true,
+@@ -102,17 +101,17 @@ panvk_per_arch(get_physical_device_extensions)(
+       .KHR_shader_draw_parameters = true,
+       .KHR_shader_expect_assume = true,
+       .KHR_shader_float_controls = true,
+-      .KHR_shader_float_controls2 = has_vk1_1,
++      .KHR_shader_float_controls2 = true,
+       .KHR_shader_float16_int8 = true,
+       .KHR_shader_fma = true,
+       .KHR_shader_integer_dot_product = true,
+-      .KHR_shader_maximal_reconvergence = has_vk1_1,
++      .KHR_shader_maximal_reconvergence = PAN_ARCH >= 9,
+       .KHR_shader_non_semantic_info = true,
+       .KHR_shader_quad_control = has_vk1_2,
+       .KHR_shader_relaxed_extended_instruction = true,
+-      .KHR_shader_subgroup_extended_types = has_vk1_1,
++      .KHR_shader_subgroup_extended_types = true,
+       .KHR_shader_subgroup_rotate = true,
+-      .KHR_shader_subgroup_uniform_control_flow = has_vk1_1,
++      .KHR_shader_subgroup_uniform_control_flow = PAN_ARCH >= 9,
+       .KHR_shader_terminate_invocation = true,
+       .KHR_shader_untyped_pointers = PAN_ARCH >= 9,
+       .KHR_spirv_1_4 = PAN_ARCH >= 10,
+@@ -214,7 +213,7 @@ panvk_per_arch(get_physical_device_extensions)(
+       .EXT_shader_subgroup_vote = true,
+       .EXT_shader_tile_image = PAN_ARCH >= 9,
+       .EXT_shader_uniform_buffer_unsized_array = true,
+-      .EXT_subgroup_size_control = has_vk1_1,
++      .EXT_subgroup_size_control = true,
+ #ifdef PANVK_USE_WSI_PLATFORM
+       .EXT_swapchain_maintenance1 = true,
+ #endif
+@@ -239,9 +238,9 @@ panvk_per_arch(get_physical_device_extensions)(
+ 
+       .VALVE_mutable_descriptor_type = PAN_ARCH >= 9,
+ 
+-      .ARM_shader_core_builtins = PAN_ARCH >= 9,
+-      .ARM_shader_core_properties = has_vk1_1,
+-      .ARM_scheduling_controls = PAN_ARCH >= 10,
++      .ARM_shader_core_builtins = true,
++      .ARM_shader_core_properties = true,
++      .ARM_scheduling_controls = true,
+       .ARM_rasterization_order_attachment_access = PAN_ARCH >= 10,
+    };
+ }
+@@ -736,10 +735,10 @@ panvk_per_arch(get_physical_device_features)(
+       .deviceMemoryReport = true,
+ 
+       /* VK_ARM_shader_core_builtins */
+-      .shaderCoreBuiltins = PAN_ARCH >= 9,
++      .shaderCoreBuiltins = true,
+ 
+       /* VK_ARM_scheduling_controls */
+-      .schedulingControls = PAN_ARCH >= 10,
++      .schedulingControls = true,
+ 
+ #ifdef PANVK_USE_WSI_PLATFORM
+       /* KHR_swapchain_maintenance1 */
+@@ -773,7 +772,7 @@ get_api_version()
+    if (PAN_ARCH >= 10)
+       return VK_MAKE_API_VERSION(0, 1, 4, VK_HEADER_VERSION);
+ 
+-   return VK_MAKE_API_VERSION(0, 1, 0, VK_HEADER_VERSION);
++   return VK_MAKE_API_VERSION(0, 1, 1, VK_HEADER_VERSION);
+ }
+ 
+ static VkConformanceVersion
+-- 
+2.55.0
+

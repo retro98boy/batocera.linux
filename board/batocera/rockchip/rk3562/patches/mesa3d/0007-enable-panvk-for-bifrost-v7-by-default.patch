@@ -1,0 +1,32 @@
+From af76a05d83a6c8a1f23d5e7c6e2b23dda5d9378c Mon Sep 17 00:00:00 2001
+From: retro98boy <retro98boy@qq.com>
+Date: Mon, 31 Aug 2026 21:34:35 +0800
+Subject: [PATCH 7/7] enable panvk for bifrost v7 by default
+
+---
+ src/panfrost/vulkan/panvk_physical_device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/panfrost/vulkan/panvk_physical_device.c b/src/panfrost/vulkan/panvk_physical_device.c
+index f33a4a3..e43b0c6 100644
+--- a/src/panfrost/vulkan/panvk_physical_device.c
++++ b/src/panfrost/vulkan/panvk_physical_device.c
+@@ -400,7 +400,6 @@ panvk_physical_device_init(struct panvk_physical_device *device,
+ 
+    switch (arch) {
+    case 6:
+-   case 7:
+    case 14:
+       if (!os_get_option("PAN_I_WANT_A_BROKEN_VULKAN_DRIVER")) {
+          result = panvk_errorf(instance, VK_ERROR_INCOMPATIBLE_DRIVER,
+@@ -411,6 +410,7 @@ panvk_physical_device_init(struct panvk_physical_device *device,
+       }
+       break;
+ 
++   case 7:
+    case 10:
+    case 12:
+    case 13:
+-- 
+2.55.0
+

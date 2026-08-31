@@ -1,0 +1,50 @@
+From 3ff574f4abedcd6e9f78bbdf6c7b160dbd686e6b Mon Sep 17 00:00:00 2001
+From: Erik Faye-Lund <erik.faye-lund@collabora.com>
+Date: Mon, 27 Jul 2026 15:52:13 +0200
+Subject: [PATCH 5/7] panvk: expose vulkan 1.3 on bifrost
+
+All major features needed for Vulkan 1.3 should already be fixed. Let's
+see if we can bump this even further!
+
+VK_KHR_shader_quad_control depends on VK_KHR_shader_maximal_reconvergence,
+so we can't expose that until we've landed !43185.
+
+Reviewed-by: Ryan Mckeever <ryan.mckeever@collabora.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/43245>
+---
+ src/panfrost/vulkan/panvk_vX_physical_device.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/src/panfrost/vulkan/panvk_vX_physical_device.c b/src/panfrost/vulkan/panvk_vX_physical_device.c
+index 7692c2c..8db16e6 100644
+--- a/src/panfrost/vulkan/panvk_vX_physical_device.c
++++ b/src/panfrost/vulkan/panvk_vX_physical_device.c
+@@ -39,7 +39,6 @@ panvk_per_arch(get_physical_device_extensions)(
+    const struct panvk_instance *instance,
+    struct vk_device_extension_table *ext)
+ {
+-   bool has_vk1_2 = PAN_ARCH >= 10;
+    bool has_gralloc = vk_android_get_ugralloc() != NULL;
+ 
+    *ext = (struct vk_device_extension_table){
+@@ -108,7 +107,7 @@ panvk_per_arch(get_physical_device_extensions)(
+       .KHR_shader_integer_dot_product = true,
+       .KHR_shader_maximal_reconvergence = PAN_ARCH >= 9,
+       .KHR_shader_non_semantic_info = true,
+-      .KHR_shader_quad_control = has_vk1_2,
++      .KHR_shader_quad_control = PAN_ARCH >= 9,
+       .KHR_shader_relaxed_extended_instruction = true,
+       .KHR_shader_subgroup_extended_types = true,
+       .KHR_shader_subgroup_rotate = true,
+@@ -776,7 +775,7 @@ get_api_version()
+    if (PAN_ARCH >= 10)
+       return VK_MAKE_API_VERSION(0, 1, 4, VK_HEADER_VERSION);
+ 
+-   return VK_MAKE_API_VERSION(0, 1, 1, VK_HEADER_VERSION);
++   return VK_MAKE_API_VERSION(0, 1, 3, VK_HEADER_VERSION);
+ }
+ 
+ static VkConformanceVersion
+-- 
+2.55.0
+

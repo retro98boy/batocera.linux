@@ -1,0 +1,50 @@
+From df46ab0145cc2271e9aab3dba684e54ff22c9c82 Mon Sep 17 00:00:00 2001
+From: Christian Gmeiner <cgmeiner@igalia.com>
+Date: Sun, 5 Apr 2026 13:53:55 +0200
+Subject: [PATCH 2/7] panvk: Advertise VK_KHR_copy_memory_indirect
+
+Now that the copy kernel and the dispatch path are in place, expose
+indirectMemoryCopy from v10 on.
+
+Signed-off-by: Christian Gmeiner <cgmeiner@igalia.com>
+Reviewed-by: Lars-Ivar Hesselberg Simonsen <lars-ivar.simonsen@arm.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/43072>
+---
+ src/panfrost/vulkan/panvk_vX_physical_device.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/panfrost/vulkan/panvk_vX_physical_device.c b/src/panfrost/vulkan/panvk_vX_physical_device.c
+index ddd8219..2f188f8 100644
+--- a/src/panfrost/vulkan/panvk_vX_physical_device.c
++++ b/src/panfrost/vulkan/panvk_vX_physical_device.c
+@@ -52,6 +52,7 @@ panvk_per_arch(get_physical_device_extensions)(
+          device->kmod.dev->props.gpu_can_query_timestamp,
+       .KHR_compute_shader_derivatives = PAN_ARCH >= 9,
+       .KHR_copy_commands2 = true,
++      .KHR_copy_memory_indirect = PAN_ARCH >= 10,
+       .KHR_create_renderpass2 = true,
+       .KHR_dedicated_allocation = true,
+       .KHR_descriptor_update_template = true,
+@@ -566,6 +567,9 @@ panvk_per_arch(get_physical_device_features)(
+       /* VK_EXT_color_write_enable */
+       .colorWriteEnable = true,
+ 
++      /* VK_KHR_copy_memory_indirect */
++      .indirectMemoryCopy = PAN_ARCH >= 10,
++
+       /* VK_EXT_conditional_rendering */
+       .conditionalRendering = PAN_ARCH >= 10,
+       .inheritedConditionalRendering = PAN_ARCH >= 10,
+@@ -1291,6 +1295,9 @@ panvk_per_arch(get_physical_device_properties)(
+       /* VK_ARM_scheduling_controls */
+       .schedulingControlsFlags =
+          VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM,
++
++      /* VK_KHR_copy_memory_indirect */
++      .supportedQueues = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT,
+    };
+ 
+    snprintf(properties->deviceName, sizeof(properties->deviceName), "%s",
+-- 
+2.55.0
+

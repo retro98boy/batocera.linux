@@ -1,0 +1,27 @@
+From 2d94867126886138b476cc1c35d8c282466d7770 Mon Sep 17 00:00:00 2001
+From: Erik Faye-Lund <erik.faye-lund@collabora.com>
+Date: Wed, 29 Jul 2026 13:56:25 +0200
+Subject: [PATCH 4/7] panvk: expose VK_KHR_spirv_1_4 on bifrost
+
+Reviewed-by: Ryan Mckeever <ryan.mckeever@collabora.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/43245>
+---
+ src/panfrost/vulkan/panvk_vX_physical_device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/panfrost/vulkan/panvk_vX_physical_device.c b/src/panfrost/vulkan/panvk_vX_physical_device.c
+index 5bbd0b9..7692c2c 100644
+--- a/src/panfrost/vulkan/panvk_vX_physical_device.c
++++ b/src/panfrost/vulkan/panvk_vX_physical_device.c
+@@ -115,7 +115,7 @@ panvk_per_arch(get_physical_device_extensions)(
+       .KHR_shader_subgroup_uniform_control_flow = PAN_ARCH >= 9,
+       .KHR_shader_terminate_invocation = true,
+       .KHR_shader_untyped_pointers = PAN_ARCH >= 9,
+-      .KHR_spirv_1_4 = PAN_ARCH >= 10,
++      .KHR_spirv_1_4 = true,
+       .KHR_storage_buffer_storage_class = true,
+ #ifdef PANVK_USE_WSI_PLATFORM
+       .KHR_present_id = true,
+-- 
+2.55.0
+
