@@ -1,25 +1,46 @@
-From: ROCKNIX <noreply@rocknix.org>
-Date: Thu, 4 Jun 2026 00:00:00 +0000
+From ab8c0c29aaff29ac8ce564431b9bb01510fbdfa9 Mon Sep 17 00:00:00 2001
+From: retro98boy <retro98boy@qq.com>
+Date: Mon, 28 Sep 2026 12:58:21 +0800
 Subject: [PATCH] backlight: aw99706: write CFG7=0x05 for the KONKR panel
 
-The KONKR Pocket FIT Elite panel needs CFG7 = 0x05 (read live off the stock
-vendor driver's working config); mainline leaves CFG7 at its POR value 0x04
-and the backlight never illuminates. Apply it at the end of hw_init.
+The KONKR Pocket FIT Elite panel needs CFG7 = 0x05 (read live off the stock vendor driver's working config); mainline leaves CFG7 at its POR value 0x04 and the backlight never illuminates. Apply it at the end of hw_init.
+
+Apply the override only when the DT root matches konkr,pocket-fit-elite, leaving the reset value unchanged on other devices.
 ---
+ drivers/video/backlight/aw99706.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/video/backlight/aw99706.c b/drivers/video/backlight/aw99706.c
+index 18299faf0..e923b5921 100644
 --- a/drivers/video/backlight/aw99706.c
 +++ b/drivers/video/backlight/aw99706.c
-@@ -290,6 +290,14 @@
+@@ -16,6 +16,7 @@
+ #include <linux/i2c.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/regmap.h>
+ 
+ #define AW99706_MAX_BRT_LVL		4095
+@@ -290,6 +291,18 @@ static int aw99706_hw_init(struct aw99706_device *aw)
  		}
  	}
  
 +	/* [konkr] Match the stock vendor config: CFG7 = 0x05 (mainline leaves it
 +	 * at POR 0x04). Read live off the working Android AW99706 — it is the only
 +	 * config register the stock driver sets that this driver doesn't, and with
-+	 * it at POR the panel backlight stays dark. */
-+	ret = aw99706_i2c_write(aw, AW99706_CFG7_REG, 0x05);
-+	if (ret < 0)
-+		return ret;
++	 * it at POR the panel backlight stays dark. Only apply this override when
++	 * the DT root identifies KONKR Pocket FIT Elite; leave other boards alone.
++	 */
++	if (of_machine_is_compatible("konkr,pocket-fit-elite")) {
++		ret = aw99706_i2c_write(aw, AW99706_CFG7_REG, 0x05);
++		if (ret < 0)
++			return ret;
++	}
 +
  	return 0;
  }
  
+-- 
+2.55.0
+

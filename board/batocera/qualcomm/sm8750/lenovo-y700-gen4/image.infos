@@ -1,0 +1,7 @@
+images:
+  - name:   lenovo-y700-gen4
+    family: sm8750
+    hardwares:
+      - name:   Legion Y700 Gen4
+        vendor: Lenovo
+        type:   tablet
