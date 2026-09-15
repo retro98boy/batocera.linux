@@ -672,7 +672,7 @@ config BR2_TARGET_BATOCERA_IMAGES_DEFINITIONS
 	default "qualcomm/sm8250"    if BR2_PACKAGE_BATOCERA_TARGET_SM8250
 	default "qualcomm/sm8550"    if BR2_PACKAGE_BATOCERA_TARGET_SM8550
 	default "qualcomm/sm8650"    if BR2_PACKAGE_BATOCERA_TARGET_SM8650
-	default "qualcomm/sm8750"    if BR2_PACKAGE_BATOCERA_TARGET_SM8750
+	default "qualcomm/sm8750 qualcomm/sm8750/lenovo-y700-gen4"    if BR2_PACKAGE_BATOCERA_TARGET_SM8750
 	default "starfive/jh7110"   							if BR2_PACKAGE_BATOCERA_TARGET_JH7110
 	default "amlogic/s922x/ogu amlogic/s922x/gtkingpro amlogic/s922x/gtking amlogic/s922x/odroidn2l amlogic/s922x/vim3 amlogic/s922x/odroidn2 amlogic/s922x/odroidn2plus amlogic/s922x/zero2" \
 													if BR2_PACKAGE_BATOCERA_TARGET_S922X

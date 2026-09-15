@@ -3,9 +3,9 @@
 # firmware-armbian
 #
 ################################################################################
-# Version: Commits on Nov 5, 2025
-FIRMWARE_ARMBIAN_VERSION = 5d4dd2fc8dd4e28ac4c85696b8ab86775babc7c7
-FIRMWARE_ARMBIAN_SITE = https://github.com/armbian/firmware
+# Version: Commits on Sep 27, 2026
+FIRMWARE_ARMBIAN_VERSION = 0c1c8566da756813ed1608462eb8e27f5f4ac733
+FIRMWARE_ARMBIAN_SITE = https://github.com/retro98boy/armbian-firmware
 FIRMWARE_ARMBIAN_SITE_METHOD = git
 
 FIRMWARE_ARMBIAN_TARGET_DIR=$(TARGET_DIR)/lib/firmware/

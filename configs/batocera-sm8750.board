@@ -11,21 +11,24 @@ BR2_PACKAGE_BATOCERA_TARGET_SM8750=y
 BR2_TARGET_OPTIMIZATION="-pipe -fsigned-char -march=armv8.7-a+crypto+sha3+sm4+fp16+rcpc+dotprod+i8mm+bf16 -mtune=oryon-1 -mno-outline-atomics"
 BR2_TARGET_GENERIC_GETTY_PORT="ttyMSM0"
 BR2_TARGET_GENERIC_GETTY_BAUDRATE_115200=y
-BR2_TARGET_BATOCERA_IMAGES="qualcomm/sm8750"
 BR2_ROOTFS_OVERLAY="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/fsoverlay $(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/qualcomm/sm8750/fsoverlay"
 BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/patches $(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/qualcomm/sm8750/patches"
+
+# Linux headers same as kernel, a 7.2 series
+BR2_KERNEL_HEADERS_AS_KERNEL=y
+BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_7_2=y
 
 # Kernel
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="7.2.8"
-BR2_KERNEL_HEADERS_7_2=y
+BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="7.2.5"
 BR2_LINUX_KERNEL_PATCH="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/qualcomm/sm8750/linux_patches"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/qualcomm/sm8750/linux_sm8750-defconfig.config"
 BR2_LINUX_KERNEL_NEEDS_HOST_OPENSSL=y
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
 BR2_LINUX_KERNEL_INTREE_DTS_NAME="qcom/cq8725s-ayn-odin3"
+BR2_LINUX_KERNEL_CUSTOM_DTS_DIR="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/qualcomm/sm8750/dts"
 
 # Filesystem tools
 BR2_PACKAGE_HOST_DOSFSTOOLS=y
@@ -43,6 +46,11 @@ BR2_PACKAGE_FIRMWARE_ARMBIAN=y
 # Bootloader
 BR2_PACKAGE_ROCKNIX_ABL=y
 BR2_PACKAGE_HOST_PYTHON_MKBOOTIMG=y
+BR2_TARGET_GRUB2=y
+BR2_TARGET_GRUB2_ARM64_EFI=y
+BR2_TARGET_GRUB2_BUILTIN_MODULES_EFI="boot linux ext2 fat squash4 part_msdos part_gpt normal efi_gop search search_fs_file search_fs_uuid search_label chain reboot"
+# Build 4096-byte UFS partition images for the Lenovo Y700 Gen4
+BR2_ROOTFS_POST_IMAGE_SCRIPT="$(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/scripts/post-image-script.sh $(BR2_EXTERNAL_BATOCERA_PATH)/board/batocera/qualcomm/sm8750/lenovo-y700-gen4/grub-split-image.py"
 
 # Batocera Splash Support
 BR2_PACKAGE_BATOCERA_SPLASH_MPV=y
