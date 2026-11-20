@@ -1,0 +1,28 @@
+Subject: [PATCH] include: linux: types: add 128-bit integer types
+
+The bundled linux/types.h shadows the toolchain's UAPI header and defines
+the same include guard. ARM64 sigcontext.h from Linux 7.3.5 uses __u128,
+so including sys/wait.h fails when the bundled header is used first.
+
+Add the signed and unsigned 128-bit types with the same alignment and
+compiler guard as the kernel UAPI header.
+
+---
+ include/linux/types.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/linux/types.h b/include/linux/types.h
+--- a/include/linux/types.h
++++ b/include/linux/types.h
+@@ -6,6 +6,11 @@
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/posix_types.h>
+ 
++#ifdef __SIZEOF_INT128__
++typedef __signed__ __int128 __s128 __attribute__((aligned(16)));
++typedef unsigned __int128 __u128 __attribute__((aligned(16)));
++#endif
++
+ 
+ /*
