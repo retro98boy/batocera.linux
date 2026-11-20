@@ -13,6 +13,7 @@
 /plugin/;
 
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/pinctrl/rockchip.h>
 #include <dt-bindings/soc/rockchip,vop2.h>
 
@@ -112,7 +113,7 @@
 	#size-cells = <0>;
 	status = "okay";
 
-	panel@0 {
+	dsi_panel: panel@0 {
 		compatible = "rocknix,generic-dsi";
 		reg = <0>;
 		pinctrl-names = "default";
@@ -267,6 +268,27 @@
 	status = "okay";
 };
 
+&i2c2 {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	touchscreen@68 {
+		compatible = "jadard,jdcommon";
+		reg = <0x68>;
+		panel = <&dsi_panel>;
+		interrupt-parent = <&gpio0>;
+		interrupts = <RK_PC3 IRQ_TYPE_EDGE_FALLING>;
+		irq-gpios = <&gpio0 RK_PC3 GPIO_ACTIVE_LOW>;
+		reset-gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_LOW>;
+		jadard,panel-sense-nums = <22 36>;
+		jadard,panel-coords = <0 800 0 1280>;
+		jadard,panel-max-points = <10>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&touchscreen_int_pin &touchscreen_rst_pin>;
+	};
+};
+
 &pinctrl {
 	display {
 		lcd_3v3_pin: lcd-3v3-pin {
@@ -275,6 +297,14 @@
 
 		lcd_reset_pin: lcd-reset-pin {
 			rockchip,pins = <0 RK_PA7 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		touchscreen_int_pin: touchscreen-int-pin {
+			rockchip,pins = <0 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+
+		touchscreen_rst_pin: touchscreen-rst-pin {
+			rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 };
